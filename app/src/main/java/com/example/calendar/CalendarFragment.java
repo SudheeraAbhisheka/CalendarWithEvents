@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,11 +92,18 @@ public class CalendarFragment extends Fragment {
             }
         });
 
+
         addEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String s = day + "/" + month + "/" + year;
                 Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CreateEventFragment createEventFragment;
+
+                createEventFragment = new CreateEventFragment();
+                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, createEventFragment).commit();
             }
         });
 

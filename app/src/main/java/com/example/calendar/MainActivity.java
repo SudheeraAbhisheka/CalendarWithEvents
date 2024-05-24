@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FragmentManager fm = getSupportFragmentManager();
-        CalendarFragment calendarFragment = (CalendarFragment) fm.findFragmentById(R.id.fragmentContainer_MainActivity);
+        CalendarFragment calendarFragment;
+
         calendarFragment = new CalendarFragment();
         fm.beginTransaction().add(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
 
