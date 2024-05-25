@@ -3,6 +3,7 @@ package com.example.calendar;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +38,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private LocalDate selectedDate;
     Button previousMonthButton;
     Button nextMonthButton;
+    TextView selectedTextTextView;
+    Button buttonAddEvent;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -80,6 +83,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         monthYearText = v.findViewById(R.id.monthYearTV);
         previousMonthButton = v.findViewById(R.id.ButtonPreviousMonth);
         nextMonthButton = v.findViewById(R.id.ButtonNextMonth);
+        selectedTextTextView = v.findViewById(R.id.textViewSelectedDate);
+        buttonAddEvent = v.findViewById(R.id.buttonAddEvent);
 
         selectedDate = LocalDate.now();
         setMonthView();
@@ -97,6 +102,17 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             public void onClick(View view) {
                 selectedDate = selectedDate.plusMonths(1);
                 setMonthView();
+            }
+        });
+
+        buttonAddEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CreateEventFragment createEventFragment;
+
+                createEventFragment = new CreateEventFragment(selectedDate);
+                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, createEventFragment).commit();
             }
         });
 
@@ -149,8 +165,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     {
         if(!dayText.equals(""))
         {
-            String message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate);
-//            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            selectedTextTextView.setText(selectedDate + "");
         }
     }
 }
