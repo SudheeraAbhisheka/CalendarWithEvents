@@ -1,21 +1,10 @@
 package com.example.calendar;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
-
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         CalendarFragment calendarFragment;
 
         calendarFragment = new CalendarFragment();
-        fm.beginTransaction().add(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
+        fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
 
     }
 }
