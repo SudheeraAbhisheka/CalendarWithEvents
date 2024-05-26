@@ -74,12 +74,12 @@
         android:ems="10"
         android:hint="Note"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNotificationTime"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNotifyPrior"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextNotificationTime"
+        android:id="@+id/editTextNotifyPrior"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
