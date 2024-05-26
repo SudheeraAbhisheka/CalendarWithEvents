@@ -1,5 +1,7 @@
 package com.example.calendar;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -88,6 +96,16 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         selectedDate = LocalDate.now();
         setMonthView();
+
+        SharedPreferences settings = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        String homeScore = settings.getString("homeScore", "");
+
+        CalendarEventString calendarEventString;
+
+        Gson gson = new Gson();
+        calendarEventString = gson.fromJson(homeScore, CalendarEventString.class);
+
+        Toast.makeText(getActivity(),calendarEventString.getNote(),Toast.LENGTH_SHORT).show();
 
         previousMonthButton.setOnClickListener(new View.OnClickListener() {
             @Override

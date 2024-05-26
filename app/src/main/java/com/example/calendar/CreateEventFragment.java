@@ -179,18 +179,7 @@ public class CreateEventFragment extends Fragment {
 //                        editTextNotifyPrior.getText().toString()
 //                );
 
-                SharedPreferences settings = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-                String homeScore = settings.getString("homeScore", "");
 
-                JSONObject mJSONObject;
-
-                try {
-                    mJSONObject = new JSONObject(homeScore);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-
-                Toast.makeText(getActivity(),mJSONObject+"",Toast.LENGTH_SHORT).show();
             }
         });
 
