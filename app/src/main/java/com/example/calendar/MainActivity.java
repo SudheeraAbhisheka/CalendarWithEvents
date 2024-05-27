@@ -21,4 +21,12 @@ public class MainActivity extends AppCompatActivity {
         fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        new NotificationService();
+
+    }
 }

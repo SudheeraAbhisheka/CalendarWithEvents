@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 /**
@@ -153,28 +154,60 @@ public class CreateEventFragment extends Fragment {
 //
 //                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 //
-//
 //                long timeAtButtonClick = System.currentTimeMillis();
 //
+//
+//
 //                alarmManager.set(AlarmManager.RTC_WAKEUP,
-//                        timeAtButtonClick + 2*1000,
+//                        timeAtButtonClick + 50*1000,
 //                        pendingIntent);
 
-                CalendarEventString calendarEventString = new CalendarEventString(
+//                CalendarEventString calendarEventString = new CalendarEventString(
+//                        editTextTitle.getText().toString(),
+//                        editTextDate.getText().toString(),
+//                        textViewStartTime.getText().toString(),
+//                        textViewEndTime.getText().toString(),
+//                        editTextNote.getText().toString(),
+//                        editTextNotifyPrior.getText().toString()
+//                );
+//
+//                String jsonInString = new Gson().toJson(calendarEventString);
+//
+//                SharedPreferences settingsIn = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = settingsIn.edit();
+//                editor.putString(System.currentTimeMillis()+"", jsonInString);
+//                editor.apply();
+
+                LocalTime startTime = null;
+                LocalTime endTime = null;
+                long notifyPrior = 0;
+                try{
+                    startTime = LocalTime.parse(textViewStartTime.getText().toString());
+                    endTime = LocalTime.parse(textViewEndTime.getText().toString());
+                }catch (DateTimeParseException e){
+
+                }
+
+                try{
+                    Long.parseLong(editTextNotifyPrior.getText().toString());
+
+                }catch (NumberFormatException e){
+
+                }
+
+                Event_dbModel dbModel = new Event_dbModel();
+                dbModel.load(getContext());
+                dbModel.addEvent(new CalendarEventOriginal(
+                        LocalDate.parse(editTextDate.getText().toString()).getYear(),
+                        LocalDate.parse(editTextDate.getText().toString()).getMonthValue(),
+                        LocalDate.parse(editTextDate.getText().toString()).getDayOfMonth(),
+                        startTime,
+                        endTime,
+                        notifyPrior,
                         editTextTitle.getText().toString(),
-                        editTextDate.getText().toString(),
-                        textViewStartTime.getText().toString(),
-                        textViewEndTime.getText().toString(),
-                        editTextNote.getText().toString(),
-                        editTextNotifyPrior.getText().toString()
-                );
+                        editTextNote.getText().toString()
+                ));
 
-                String jsonInString = new Gson().toJson(calendarEventString);
-
-                SharedPreferences settingsIn = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = settingsIn.edit();
-                editor.putString(System.currentTimeMillis()+"", jsonInString);
-                editor.apply();
 
                 Toast.makeText(getActivity(), "Saved", Toast.LENGTH_LONG).show();
 

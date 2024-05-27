@@ -2,38 +2,51 @@ package com.example.calendar;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 
 public class CalendarEventOriginal {
-    private String title;
-    private LocalDate date;
+    private int year;
+    private int month;
+    private int day;
     private LocalTime startTime;
     private LocalTime endTime;
-    private String note;
     private long notifyPrior;
+    private String title;
+    private String note;
 
-    public CalendarEventOriginal(String title, LocalDate date, LocalTime startTime, LocalTime endTime, String note, long notifyPrior) {
-        this.title = title;
-        this.date = date;
+    public CalendarEventOriginal(int year, int month, int day, LocalTime startTime, LocalTime endTime, long notifyPrior, String title, String note) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.note = note;
         this.notifyPrior = notifyPrior;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
         this.title = title;
+        this.note = note;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public int getYear() {
+        return year;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
     }
 
     public LocalTime getStartTime() {
@@ -52,14 +65,6 @@ public class CalendarEventOriginal {
         this.endTime = endTime;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
     public long getNotifyPrior() {
         return notifyPrior;
     }
@@ -68,4 +73,20 @@ public class CalendarEventOriginal {
         this.notifyPrior = notifyPrior;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }
+

@@ -51,6 +51,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
     private ArrayList<CalendarEventString> eventsList;
+    private Event_dbModel eventDatabase;
     Button previousMonthButton;
     Button nextMonthButton;
     TextView selectedTextTextView;
@@ -85,23 +86,29 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        eventDatabase = new Event_dbModel();
         eventsList = new ArrayList<>();
 
-        CalendarEventString calendarEventString;
-        CalendarEventOriginal cEvent;
+//        CalendarEventString calendarEventString;
+//        CalendarEventOriginal cEvent;
+//
+//        SharedPreferences settings = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+//
+//        Map<String, ?> allEntries = settings.getAll();
+//
+//        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+////            Gson gson = new Gson();
+////            calendarEventString = gson.fromJson(entry.getValue().toString(), CalendarEventString.class);
+////            cEvent = calendarEventOriginal(calendarEventString);
+////            YearMonth yearMonth = YearMonth.from(cEvent.getDate());
+//
+////            eventsList.add(calendarEventString);
+//        }
 
-        SharedPreferences settings = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        Event_dbModel dbModel = new Event_dbModel();
+        dbModel.load(getContext());
+        Log.d(TAG, dbModel.getEvents(2024, 5).get(0).getTitle()+"");
 
-        Map<String, ?> allEntries = settings.getAll();
-
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            Gson gson = new Gson();
-            calendarEventString = gson.fromJson(entry.getValue().toString(), CalendarEventString.class);
-            cEvent = calendarEventOriginal(calendarEventString);
-            YearMonth yearMonth = YearMonth.from(cEvent.getDate());
-
-//            eventsList.add(calendarEventString);
-        }
     }
 
     @Override
@@ -150,22 +157,22 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         return v;
     }
 
-    private CalendarEventOriginal calendarEventOriginal(CalendarEventString s){
-        LocalTime startTime = null, endTime = null;
-        long notifyPrior = 0;
-        LocalDate date;
-
-        date = LocalDate.parse(s.getDate());
-
-        if(s.getStartTime() != "")
-            startTime = LocalTime.parse(s.getStartTime());
-        if(s.getEndTime() != "")
-            endTime = LocalTime.parse(s.getEndTime());
-        if(s.getNotifyPrior() != "")
-            notifyPrior = Long.valueOf(s.getNotifyPrior());
-
-        return new CalendarEventOriginal(s.getTitle(), date, startTime, endTime, s.getNote(), notifyPrior);
-    }
+//    private CalendarEventOriginal calendarEventOriginal(CalendarEventString s){
+//        LocalTime startTime = null, endTime = null;
+//        long notifyPrior = 0;
+//        LocalDate date;
+//
+//        date = LocalDate.parse(s.getDate());
+//
+//        if(s.getStartTime() != "")
+//            startTime = LocalTime.parse(s.getStartTime());
+//        if(s.getEndTime() != "")
+//            endTime = LocalTime.parse(s.getEndTime());
+//        if(s.getNotifyPrior() != "")
+//            notifyPrior = Long.valueOf(s.getNotifyPrior());
+//
+//        return new CalendarEventOriginal(s.getTitle(), date, startTime, endTime, s.getNote(), notifyPrior);
+//    }
 
     private void setMonthView()
     {
