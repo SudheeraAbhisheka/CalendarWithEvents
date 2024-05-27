@@ -1,5 +1,7 @@
 package com.example.calendar;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +24,13 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,11 +50,11 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
+    private ArrayList<CalendarEventString> eventsList;
     Button previousMonthButton;
     Button nextMonthButton;
     TextView selectedTextTextView;
     Button buttonAddEvent;
-
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -79,6 +85,23 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        eventsList = new ArrayList<>();
+
+        CalendarEventString calendarEventString;
+        CalendarEventOriginal cEvent;
+
+        SharedPreferences settings = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+
+        Map<String, ?> allEntries = settings.getAll();
+
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            Gson gson = new Gson();
+            calendarEventString = gson.fromJson(entry.getValue().toString(), CalendarEventString.class);
+            cEvent = calendarEventOriginal(calendarEventString);
+            YearMonth yearMonth = YearMonth.from(cEvent.getDate());
+
+//            eventsList.add(calendarEventString);
+        }
     }
 
     @Override
@@ -96,16 +119,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         selectedDate = LocalDate.now();
         setMonthView();
-
-        SharedPreferences settings = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-        String homeScore = settings.getString("homeScore", "");
-
-        CalendarEventString calendarEventString;
-
-        Gson gson = new Gson();
-        calendarEventString = gson.fromJson(homeScore, CalendarEventString.class);
-
-        Toast.makeText(getActivity(),calendarEventString.getNote(),Toast.LENGTH_SHORT).show();
 
         previousMonthButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +142,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 CreateEventFragment createEventFragment;
 
-                createEventFragment = new CreateEventFragment(selectedDate);
+                createEventFragment = new CreateEventFragment(selectedDate, eventsList);
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, createEventFragment).commit();
             }
         });
@@ -137,12 +150,29 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         return v;
     }
 
+    private CalendarEventOriginal calendarEventOriginal(CalendarEventString s){
+        LocalTime startTime = null, endTime = null;
+        long notifyPrior = 0;
+        LocalDate date;
+
+        date = LocalDate.parse(s.getDate());
+
+        if(s.getStartTime() != "")
+            startTime = LocalTime.parse(s.getStartTime());
+        if(s.getEndTime() != "")
+            endTime = LocalTime.parse(s.getEndTime());
+        if(s.getNotifyPrior() != "")
+            notifyPrior = Long.valueOf(s.getNotifyPrior());
+
+        return new CalendarEventOriginal(s.getTitle(), date, startTime, endTime, s.getNote(), notifyPrior);
+    }
+
     private void setMonthView()
     {
         monthYearText.setText(monthYearFromDate(selectedDate));
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, eventsList, this);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);

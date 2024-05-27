@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginBottom="42dp"
-        android:text="Start time"
+        android:hint="Start time"
         app:layout_constraintBottom_toTopOf="@+id/textViewEndTime"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginBottom="36dp"
-        android:text="End time"
+        android:hint="End time"
         app:layout_constraintBottom_toTopOf="@+id/editTextNote"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -87,7 +87,7 @@
         android:layout_marginBottom="200dp"
         android:ems="10"
         android:hint="Notification time"
-        android:inputType="text"
+        android:inputType="number|numberDecimal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

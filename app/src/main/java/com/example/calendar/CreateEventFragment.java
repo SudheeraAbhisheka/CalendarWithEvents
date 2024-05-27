@@ -1,5 +1,7 @@
 package com.example.calendar;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
@@ -16,8 +18,10 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +40,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,12 +64,14 @@ public class CreateEventFragment extends Fragment {
     private TextView textViewStartTime, textViewEndTime;
     private Button saveButton;
     private int hour = 0, minute = 0;
+    private ArrayList<CalendarEventString> eventsList;
     public CreateEventFragment() {
         // Required empty public constructor
     }
 
-    public CreateEventFragment(LocalDate selectedDate) {
+    public CreateEventFragment(LocalDate selectedDate, ArrayList<CalendarEventString> eventsList) {
         this.selectedDate = selectedDate;
+        this.eventsList = eventsList;
     }
 
     /**
@@ -109,24 +118,6 @@ public class CreateEventFragment extends Fragment {
         editTextDate.setText(selectedDate + "");
 
 
-
-        CalendarEventString mSampleObject = new CalendarEventString(
-                        "a",
-                        "b",
-                        "c",
-                        "d",
-                        "e",
-                        "f"
-                );
-
-        String jsonInString = new Gson().toJson(mSampleObject);
-
-        SharedPreferences settingsIn = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settingsIn.edit();
-        editor.putString("homeScore", jsonInString);
-        editor.commit();
-
-
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.POST_NOTIFICATIONS) !=
                     PackageManager.PERMISSION_GRANTED){
@@ -162,52 +153,42 @@ public class CreateEventFragment extends Fragment {
 //
 //                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 //
-//                Toast.makeText(getActivity(), "Saved", Toast.LENGTH_LONG).show();
 //
 //                long timeAtButtonClick = System.currentTimeMillis();
 //
 //                alarmManager.set(AlarmManager.RTC_WAKEUP,
 //                        timeAtButtonClick + 2*1000,
 //                        pendingIntent);
-//
-//                CalendarEventString calendarEventString = new CalendarEventString(
-//                        editTextTitle.getText().toString(),
-//                        editTextDate.getText().toString(),
-//                        textViewStartTime.getText().toString(),
-//                        textViewEndTime.getText().toString(),
-//                        editTextNote.getText().toString(),
-//                        editTextNotifyPrior.getText().toString()
-//                );
 
+                CalendarEventString calendarEventString = new CalendarEventString(
+                        editTextTitle.getText().toString(),
+                        editTextDate.getText().toString(),
+                        textViewStartTime.getText().toString(),
+                        textViewEndTime.getText().toString(),
+                        editTextNote.getText().toString(),
+                        editTextNotifyPrior.getText().toString()
+                );
+
+                String jsonInString = new Gson().toJson(calendarEventString);
+
+                SharedPreferences settingsIn = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settingsIn.edit();
+                editor.putString(System.currentTimeMillis()+"", jsonInString);
+                editor.apply();
+
+                Toast.makeText(getActivity(), "Saved", Toast.LENGTH_LONG).show();
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CalendarFragment calendarFragment;
+
+                calendarFragment = new CalendarFragment();
+                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
 
             }
         });
 
         return v;
     }
-
-//    private CalendarEventOriginal createCalendarEvent(String title, String stringDate, String stringStartTime, String stringEndTime, String note, String stringNotifyPrior){
-//
-//
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
-//        formatter = formatter.withLocale( putAppropriateLocaleHere );  // Locale specifies human language for translating, and cultural norms for lowercase/uppercase and abbreviations and such. Example: Locale.US or Locale.CANADA_FRENCH
-//        LocalDate date = LocalDate.parse("2005-nov-12", formatter);
-//
-//        LocalDate date = LocalDate.parse(editTextDate.getText().toString());
-//        LocalTime startTime = LocalTime.parse(textViewStartTime.getText().toString());
-//        LocalTime endTime = LocalTime.parse(textViewEndTime.getText().toString());
-//        long notifyPrior =
-//
-//                CalendarEventOriginal calendarEvent = new CalendarEventOriginal(title,
-//                editTextDate.getText().toString(),
-//                textViewStartTime.getText().toString(),
-//                textViewEndTime.getText().toString(),
-//                editTextNote.getText().toString(),
-//                editTextNotifyPrior.getText().toString()
-//        );
-//
-//        return null;
-//    }
 
     private void createNotificationChannel(){
         CharSequence name = "LemubitReminderChannel";
