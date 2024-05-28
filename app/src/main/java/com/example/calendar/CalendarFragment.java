@@ -107,7 +107,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         Event_dbModel dbModel = new Event_dbModel();
         dbModel.load(getContext());
-        Log.d(TAG, dbModel.getEvents(2024, 5).get(0).getTitle()+"");
+        if(dbModel.getEvents(2024, 11).size() != 0)
+            Log.d(TAG, dbModel.getEvents(2024, 11).get(0).getStartTimeHour()+"");
 
     }
 
@@ -156,6 +157,9 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         return v;
     }
+
+//    LocalTime startTime = LocalTime.of(startEventHour, startEventMinute);
+//    LocalTime endTime = LocalTime.of(endEventHour, endEventMinute);
 
 //    private CalendarEventOriginal calendarEventOriginal(CalendarEventString s){
 //        LocalTime startTime = null, endTime = null;

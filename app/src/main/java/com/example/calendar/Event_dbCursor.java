@@ -1,7 +1,10 @@
 package com.example.calendar;
 
+import static android.content.ContentValues.TAG;
+
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.util.Log;
 
 import com.example.calendar.Event_dbSchema.EventsTable;
 
@@ -15,16 +18,8 @@ public class Event_dbCursor extends CursorWrapper {
     }
 
     public CalendarEventOriginal getEvent(){
-
-        LocalTime startTime = null;
-        LocalTime endTime = null;
         long notifyPrior = 0;
-        try{
-            startTime = LocalTime.parse(getString(getColumnIndex(EventsTable.Columns.START_TIME)));
-            endTime = LocalTime.parse(getString(getColumnIndex(EventsTable.Columns.END_TIME)));
-        }catch (DateTimeParseException e){
 
-        }
         try{
             notifyPrior = Long.parseLong( getString(getColumnIndex(EventsTable.Columns.NOTIFY_PRIOR)));
 
@@ -36,8 +31,10 @@ public class Event_dbCursor extends CursorWrapper {
             getInt(getColumnIndex(EventsTable.Columns.YEAR)),
             getInt(getColumnIndex(EventsTable.Columns.MONTH)),
             getInt(getColumnIndex(EventsTable.Columns.DAY)),
-            startTime,
-            endTime,
+            getInt(getColumnIndex(EventsTable.Columns.START_TIME_HOUR)),
+            getInt(getColumnIndex(EventsTable.Columns.START_TIME_MINUTE)),
+            getInt(getColumnIndex(EventsTable.Columns.END_TIME_HOUR)),
+            getInt(getColumnIndex(EventsTable.Columns.END_TIME_MINUTE)),
             notifyPrior,
             getString(getColumnIndex(EventsTable.Columns.TITLE)),
             getString(getColumnIndex(EventsTable.Columns.NOTE))

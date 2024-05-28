@@ -26,12 +26,13 @@ public class Event_dbModel {
         ContentValues cv = new ContentValues();
         cv.put(EventsTable.Columns.YEAR, event.getYear());
         cv.put(EventsTable.Columns.MONTH, event.getMonth());
-        cv.put(EventsTable.Columns.DAY, event.getTitle());
-        cv.put(EventsTable.Columns.START_TIME, event.getTitle());
-        cv.put(EventsTable.Columns.END_TIME, event.getTitle());
-        cv.put(EventsTable.Columns.NOTIFY_PRIOR, event.getNotifyPrior());
+        cv.put(EventsTable.Columns.DAY, event.getDay());
+        cv.put(EventsTable.Columns.START_TIME_HOUR, event.getStartTimeHour());
+        cv.put(EventsTable.Columns.START_TIME_MINUTE, event.getStartTimeMinute());
+        cv.put(EventsTable.Columns.END_TIME_HOUR, event.getEndTimeHour());
+        cv.put(EventsTable.Columns.END_TIME_MINUTE, event.getEndTimeMinute());
         cv.put(EventsTable.Columns.TITLE, event.getTitle());
-        cv.put(EventsTable.Columns.NOTE, event.getTitle());
+        cv.put(EventsTable.Columns.NOTE, event.getNote());
 
         dataBase.insert(EventsTable.NAME, null, cv);
     }

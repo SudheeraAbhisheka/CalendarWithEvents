@@ -64,7 +64,8 @@ public class CreateEventFragment extends Fragment {
     private EditText editTextTitle, editTextDate, editTextNote, editTextNotifyPrior;
     private TextView textViewStartTime, textViewEndTime;
     private Button saveButton;
-    private int hour = 0, minute = 0;
+    private int startEventHour = 0, startEventMinute = 0,
+    endEventHour = 0, endEventMinute = 0;
     private ArrayList<CalendarEventString> eventsList;
     public CreateEventFragment() {
         // Required empty public constructor
@@ -129,19 +130,65 @@ public class CreateEventFragment extends Fragment {
 
         createNotificationChannel();
 
-        TimePickerDialog timePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+//        // Get current system time
+//        Calendar currentTime = Calendar.getInstance();
+//
+//        mTimePicker = new TimePickerDialog(Take_Away.this,
+//                new TimePickerDialog.OnTimeSetListener() {
+//                    @SuppressLint("SimpleDateFormat")
+//                    @Override
+//                    public void onTimeSet(TimePicker timePicker,
+//                                          int selectedHour, int selectedMinute) {
+//
+//                        Calendar time = Calendar.getInstance();
+//
+//                        time.set(Calendar.HOUR_OF_DAY, selectedHour);
+//
+//                        time.set(Calendar.MINUTE, selectedMinute);
+//                        SimpleDateFormat format = new SimpleDateFormat(
+//                                "hh:mm a");
+//                        textViewStartTime.setText(format.format(time.getTime()));
+//                        hour = selectedHour;
+//                        minute = selectedMinute;
+//                    }
+//                },
+//
+//                currentTime.get(Calendar.HOUR_OF_DAY), // Current hour value
+//                currentTime.get(Calendar.MINUTE), // Current minute value
+//                DateFormat.is24HourFormat()); // Check 24 Hour or AM/PM format
+//
+//        mTimePicker.setTitle("Select Time");
+//        mTimePicker.show();
+
+        TimePickerDialog startTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int ii) {
-                hour = i;
-                minute = ii;
-                textViewStartTime.setText(hour+":"+minute);
+                startEventHour = i;
+                startEventMinute = ii;
+                textViewStartTime.setText(startEventHour+":"+startEventMinute);
             }
-        }, hour, minute, false);
+        }, 0, 0, false);
 
         textViewStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                timePicker.show();
+                startTimePicker.show();
+            }
+        });
+
+        TimePickerDialog endTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int ii) {
+                endEventHour = i;
+                endEventMinute = ii;
+                textViewEndTime.setText(endEventHour+":"+endEventMinute);
+            }
+        }, 0, 0, false);
+
+        textViewEndTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                endTimePicker.show();
             }
         });
 
@@ -178,15 +225,15 @@ public class CreateEventFragment extends Fragment {
 //                editor.putString(System.currentTimeMillis()+"", jsonInString);
 //                editor.apply();
 
-                LocalTime startTime = null;
-                LocalTime endTime = null;
-                long notifyPrior = 0;
-                try{
-                    startTime = LocalTime.parse(textViewStartTime.getText().toString());
-                    endTime = LocalTime.parse(textViewEndTime.getText().toString());
-                }catch (DateTimeParseException e){
 
-                }
+                long notifyPrior = 0;
+
+//                try{
+//                    startTime = LocalTime.parse(textViewStartTime.getText().toString());
+//                    endTime = LocalTime.parse(textViewEndTime.getText().toString());
+//                }catch (DateTimeParseException e){
+//
+//                }
 
                 try{
                     Long.parseLong(editTextNotifyPrior.getText().toString());
@@ -201,8 +248,10 @@ public class CreateEventFragment extends Fragment {
                         LocalDate.parse(editTextDate.getText().toString()).getYear(),
                         LocalDate.parse(editTextDate.getText().toString()).getMonthValue(),
                         LocalDate.parse(editTextDate.getText().toString()).getDayOfMonth(),
-                        startTime,
-                        endTime,
+                        startEventHour,
+                        startEventMinute,
+                        endEventHour,
+                        endEventMinute,
                         notifyPrior,
                         editTextTitle.getText().toString(),
                         editTextNote.getText().toString()

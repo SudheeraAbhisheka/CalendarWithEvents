@@ -8,18 +8,22 @@ public class CalendarEventOriginal {
     private int year;
     private int month;
     private int day;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private int startTimeHour;
+    private int startTimeMinute;
+    private int endTimeHour;
+    private int endTimeMinute;
     private long notifyPrior;
     private String title;
     private String note;
 
-    public CalendarEventOriginal(int year, int month, int day, LocalTime startTime, LocalTime endTime, long notifyPrior, String title, String note) {
+    public CalendarEventOriginal(int year, int month, int day, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, long notifyPrior, String title, String note) {
         this.year = year;
         this.month = month;
         this.day = day;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTimeHour = startTimeHour;
+        this.startTimeMinute = startTimeMinute;
+        this.endTimeHour = endTimeHour;
+        this.endTimeMinute = endTimeMinute;
         this.notifyPrior = notifyPrior;
         this.title = title;
         this.note = note;
@@ -49,20 +53,36 @@ public class CalendarEventOriginal {
         this.day = day;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+    public int getStartTimeHour() {
+        return startTimeHour;
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
+    public void setStartTimeHour(int startTimeHour) {
+        this.startTimeHour = startTimeHour;
     }
 
-    public LocalTime getEndTime() {
-        return endTime;
+    public int getStartTimeMinute() {
+        return startTimeMinute;
     }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+    public void setStartTimeMinute(int startTimeMinute) {
+        this.startTimeMinute = startTimeMinute;
+    }
+
+    public int getEndTimeHour() {
+        return endTimeHour;
+    }
+
+    public void setEndTimeHour(int endTimeHour) {
+        this.endTimeHour = endTimeHour;
+    }
+
+    public int getEndTimeMinute() {
+        return endTimeMinute;
+    }
+
+    public void setEndTimeMinute(int endTimeMinute) {
+        this.endTimeMinute = endTimeMinute;
     }
 
     public long getNotifyPrior() {

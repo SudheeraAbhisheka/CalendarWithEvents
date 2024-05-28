@@ -21,8 +21,10 @@ public class Event_dbHelper extends SQLiteOpenHelper {
                 EventsTable.Columns.YEAR + " Text, "+
                 EventsTable.Columns.MONTH + " Text, "+
                 EventsTable.Columns.DAY + " Text, "+
-                EventsTable.Columns.START_TIME + " Text, "+
-                EventsTable.Columns.END_TIME + " Text, "+
+                EventsTable.Columns.START_TIME_HOUR + " Text, "+
+                EventsTable.Columns.START_TIME_MINUTE + " Text, "+
+                EventsTable.Columns.END_TIME_HOUR + " Text, "+
+                EventsTable.Columns.END_TIME_MINUTE + " Text, "+
                 EventsTable.Columns.NOTIFY_PRIOR + " Text, "+
                 EventsTable.Columns.NOTE + " Text, "+
                 EventsTable.Columns.TITLE+ " Text);");
