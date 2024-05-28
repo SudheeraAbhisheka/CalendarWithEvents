@@ -2,9 +2,12 @@ package com.example.calendar;
 
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.time.LocalDate;
 
 public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
@@ -28,6 +31,13 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View view)
     {
-        onItemListener.onItemClick(getAdapterPosition(), (String) dayOfMonth.getText());
+        int i = 0;
+        try{
+            i = Integer.parseInt(dayOfMonth.getText().toString());
+
+        }catch (NumberFormatException e){
+
+        }
+        onItemListener.onItemClick(getAdapterPosition(), i);
     }
 }

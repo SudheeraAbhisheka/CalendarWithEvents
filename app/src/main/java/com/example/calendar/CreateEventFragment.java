@@ -66,14 +66,12 @@ public class CreateEventFragment extends Fragment {
     private Button saveButton;
     private int startEventHour = 0, startEventMinute = 0,
     endEventHour = 0, endEventMinute = 0;
-    private ArrayList<CalendarEventString> eventsList;
     public CreateEventFragment() {
         // Required empty public constructor
     }
 
-    public CreateEventFragment(LocalDate selectedDate, ArrayList<CalendarEventString> eventsList) {
+    public CreateEventFragment(LocalDate selectedDate) {
         this.selectedDate = selectedDate;
-        this.eventsList = eventsList;
     }
 
     /**

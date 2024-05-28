@@ -50,7 +50,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
-    private ArrayList<CalendarEventString> eventsList;
+    private ArrayList<CalendarEventOriginal> eventsList;
     private Event_dbModel eventDatabase;
     Button previousMonthButton;
     Button nextMonthButton;
@@ -105,10 +105,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 ////            eventsList.add(calendarEventString);
 //        }
 
-        Event_dbModel dbModel = new Event_dbModel();
-        dbModel.load(getContext());
-        if(dbModel.getEvents(2024, 11).size() != 0)
-            Log.d(TAG, dbModel.getEvents(2024, 11).get(0).getStartTimeHour()+"");
+        eventDatabase = new Event_dbModel();
+        eventDatabase.load(getContext());
 
     }
 
@@ -126,12 +124,14 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         buttonAddEvent = v.findViewById(R.id.buttonAddEvent);
 
         selectedDate = LocalDate.now();
+        selectedTextTextView.setText(selectedDate.toString());
         setMonthView();
 
         previousMonthButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedDate = selectedDate.minusMonths(1);
+                selectedTextTextView.setText(selectedDate.toString());
                 setMonthView();
             }
         });
@@ -140,6 +140,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             @Override
             public void onClick(View view) {
                 selectedDate = selectedDate.plusMonths(1);
+                selectedTextTextView.setText(selectedDate.toString());
                 setMonthView();
             }
         });
@@ -150,7 +151,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 CreateEventFragment createEventFragment;
 
-                createEventFragment = new CreateEventFragment(selectedDate, eventsList);
+                createEventFragment = new CreateEventFragment(selectedDate);
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, createEventFragment).commit();
             }
         });
@@ -181,18 +182,21 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private void setMonthView()
     {
         monthYearText.setText(monthYearFromDate(selectedDate));
-        ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
+//        ArrayList<CalendarEventOriginal> eventsInMonth = eventsInMonthArray(selectedDate);
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, eventsList, this);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(
+                daysInMonthArray(),
+                eventsInMonthArray(eventDatabase.getEvents(selectedDate.getYear(), selectedDate.getMonthValue())),
+                this);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
 
-    private ArrayList<String> daysInMonthArray(LocalDate date)
+    private ArrayList<String> daysInMonthArray()
     {
         ArrayList<String> daysInMonthArray = new ArrayList<>();
-        YearMonth yearMonth = YearMonth.from(date);
+        YearMonth yearMonth = YearMonth.from(selectedDate);
 
         int daysInMonth = yearMonth.lengthOfMonth();
 
@@ -212,6 +216,34 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         }
         return  daysInMonthArray;
     }
+    private ArrayList<CalendarEventOriginal> eventsInMonthArray(ArrayList<CalendarEventOriginal> eventsArray)
+    {
+        ArrayList<CalendarEventOriginal> eventsInMonthArray = new ArrayList<>();
+        ArrayList<CalendarEventOriginal> eventsInDayArray = new ArrayList<>();
+        YearMonth yearMonth = YearMonth.from(selectedDate);
+
+        int daysInMonth = yearMonth.lengthOfMonth();
+
+        LocalDate firstOfMonth = selectedDate.withDayOfMonth(1);
+        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
+
+        for(int i = 1; i <= 42; i++)
+        {
+            if(i <= dayOfWeek || i > daysInMonth + dayOfWeek)
+            {
+                eventsInMonthArray.add(null);
+            }
+            else
+            {
+                for(CalendarEventOriginal c : eventsArray){
+                    if(c.getDay() == i - dayOfWeek){
+                        eventsInMonthArray.add(c);
+                    }
+                }
+            }
+        }
+        return  eventsInMonthArray;
+    }
 
     private String monthYearFromDate(LocalDate date)
     {
@@ -220,11 +252,11 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     }
 
     @Override
-    public void onItemClick(int position, String dayText)
+    public void onItemClick(int position, int selectedDay)
     {
-        if(!dayText.equals(""))
-        {
-            selectedTextTextView.setText(selectedDate + "");
+        if(selectedDay != 0){
+            selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+            selectedTextTextView.setText(selectedDate.toString());
         }
     }
 }

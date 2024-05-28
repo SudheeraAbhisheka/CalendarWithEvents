@@ -26,8 +26,8 @@ public class Event_dbHelper extends SQLiteOpenHelper {
                 EventsTable.Columns.END_TIME_HOUR + " Text, "+
                 EventsTable.Columns.END_TIME_MINUTE + " Text, "+
                 EventsTable.Columns.NOTIFY_PRIOR + " Text, "+
-                EventsTable.Columns.NOTE + " Text, "+
-                EventsTable.Columns.TITLE+ " Text);");
+                EventsTable.Columns.TITLE + " Text, "+
+                EventsTable.Columns.NOTE+ " Text);");
     }
 
     @Override
