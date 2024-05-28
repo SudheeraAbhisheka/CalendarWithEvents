@@ -60,4 +60,29 @@ public class Event_dbModel {
 
         return eventsList;
     }
+
+    public ArrayList<CalendarEventOriginal> getEventsInADay(int year, int month, int day){
+        ArrayList<CalendarEventOriginal> eventsList = new ArrayList<>();
+
+        Cursor cursor = dataBase.rawQuery("SELECT * FROM "+ Event_dbSchema.EventsTable.NAME +
+                        " WHERE " +  EventsTable.Columns.YEAR + " = ? AND " +
+                        EventsTable.Columns.MONTH + " = ? AND " +
+                        EventsTable.Columns.DAY + " = ?",
+                new String[]{year + "", month + "", day + ""});
+
+        Event_dbCursor eventDbCursor = new Event_dbCursor(cursor);
+
+        try{
+            eventDbCursor.moveToFirst();
+            while(!eventDbCursor.isAfterLast()){
+                eventsList.add(eventDbCursor.getEvent());
+                eventDbCursor.moveToNext();
+            }
+        }
+        finally {
+            cursor.close();
+        }
+
+        return eventsList;
+    }
 }

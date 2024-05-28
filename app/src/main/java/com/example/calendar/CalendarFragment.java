@@ -88,6 +88,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         eventDatabase = new Event_dbModel();
         eventsList = new ArrayList<>();
+        eventDatabase.load(getContext());
 
 //        CalendarEventString calendarEventString;
 //        CalendarEventOriginal cEvent;
@@ -104,9 +105,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 //
 ////            eventsList.add(calendarEventString);
 //        }
-
-        eventDatabase = new Event_dbModel();
-        eventDatabase.load(getContext());
 
     }
 
@@ -186,6 +184,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(
                 daysInMonthArray(),
+                YearMonth.from(selectedDate),
+
                 eventsInMonthArray(eventDatabase.getEvents(selectedDate.getYear(), selectedDate.getMonthValue())),
                 this);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 7);
@@ -219,7 +219,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private ArrayList<CalendarEventOriginal> eventsInMonthArray(ArrayList<CalendarEventOriginal> eventsArray)
     {
         ArrayList<CalendarEventOriginal> eventsInMonthArray = new ArrayList<>();
-        ArrayList<CalendarEventOriginal> eventsInDayArray = new ArrayList<>();
         YearMonth yearMonth = YearMonth.from(selectedDate);
 
         int daysInMonth = yearMonth.lengthOfMonth();
@@ -244,6 +243,39 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         }
         return  eventsInMonthArray;
     }
+//    private ArrayList<CalendarEventOriginal> dayEvents(ArrayList<CalendarEventOriginal> eventsArray)
+//    {
+//        ArrayList<CalendarEventOriginal> eventsInADayArray = new ArrayList<>();
+//        YearMonth yearMonth = YearMonth.from(selectedDate);
+//
+//        int daysInMonth = yearMonth.lengthOfMonth();
+//
+//        LocalDate firstOfMonth = selectedDate.withDayOfMonth(1);
+//        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
+//        int dayOfMonth = 0;
+//
+//        for(int i = 1; i <= 42; i++)
+//        {
+//            if(i <= dayOfWeek || i > daysInMonth + dayOfWeek)
+//            {
+//                eventsArray.add(null);
+//            }
+//            else
+//            {
+//                dayOfMonth = i - dayOfWeek;
+//                eventsArray.add(
+//                        eventDatabase.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), dayOfMonth)
+//                );
+//
+//                for(CalendarEventOriginal c : eventsArray){
+//                    if(c.getDay() == i - dayOfWeek){
+//                        eventsInADayArray.add(c);
+//                    }
+//                }
+//            }
+//        }
+//        return  eventsInADayArray;
+//    }
 
     private String monthYearFromDate(LocalDate date)
     {
