@@ -1,15 +1,13 @@
-package com.example.calendar;
+package com.example.calendar.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.example.calendar.Event_dbSchema.EventsTable;
+import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.database.Event_dbSchema.EventsTable;
 
-import java.time.Year;
-import java.time.YearMonth;
 import java.util.ArrayList;
 
 public class Event_dbModel {

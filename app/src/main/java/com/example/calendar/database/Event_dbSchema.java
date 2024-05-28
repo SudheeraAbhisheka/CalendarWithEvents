@@ -1,4 +1,4 @@
-package com.example.calendar;
+package com.example.calendar.database;
 
 public class Event_dbSchema {
     public static class EventsTable{

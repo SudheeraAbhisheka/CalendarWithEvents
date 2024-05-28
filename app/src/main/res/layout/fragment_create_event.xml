@@ -6,91 +6,107 @@
     android:layout_height="match_parent"
     tools:context=".CreateEventFragment">
 
+    <!-- Event Heading -->
+    <TextView
+        android:id="@+id/textViewEventHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Event"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Title EditText -->
     <EditText
         android:id="@+id/editTextTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="122dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="124dp"
-        android:ems="10"
         android:hint="Title"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/textViewStartTime"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEventHeading"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Date EditText -->
     <EditText
         android:id="@+id/editTextDate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="28dp"
-        android:ems="10"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="25dp"
+        android:hint="Date (YYYY-MM-DD)"
         android:inputType="date"
-        android:text="00/00/0000"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTitle" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Start Time TextView -->
     <TextView
         android:id="@+id/textViewStartTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="42dp"
-        android:hint="Start time"
-        app:layout_constraintBottom_toTopOf="@+id/textViewEndTime"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="16dp"
+        android:text="Start time"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/buttonSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="47dp"
-        android:text="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+    <!-- End Time TextView -->
     <TextView
         android:id="@+id/textViewEndTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="36dp"
-        android:hint="End time"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNote"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="16dp"
+        android:text="End time"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStartTime"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Note EditText -->
     <EditText
         android:id="@+id/editTextNote"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="34dp"
-        android:ems="10"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="25dp"
         android:hint="Note"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNotifyPrior"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewEndTime"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Notification Time EditText -->
     <EditText
         android:id="@+id/editTextNotifyPrior"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="200dp"
-        android:ems="10"
-        android:hint="Notification time"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="25dp"
+        android:hint="Notification time (minutes)"
         android:inputType="number|numberDecimal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNote"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Save"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNotifyPrior"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

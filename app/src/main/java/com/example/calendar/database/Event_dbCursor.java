@@ -1,15 +1,10 @@
-package com.example.calendar;
-
-import static android.content.ContentValues.TAG;
+package com.example.calendar.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.util.Log;
 
-import com.example.calendar.Event_dbSchema.EventsTable;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
+import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.database.Event_dbSchema.EventsTable;
 
 public class Event_dbCursor extends CursorWrapper {
 

@@ -1,16 +1,17 @@
-package com.example.calendar;
+package com.example.calendar.calendar;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.LocalDate;
+import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.R;
+import com.example.calendar.database.Event_dbModel;
+
 import java.time.YearMonth;
 import java.util.ArrayList;
 
@@ -49,10 +50,16 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position)
     {
-        holder.dayOfMonth.setText(daysOfMonth.get(position));
+        if(daysOfMonth.get(position) == ""){
+            holder.constraintLayout.setBackgroundResource(android.R.color.transparent);
+//            holder.dayOfMonth.tex
+        }
+        else{
+            holder.dayOfMonth.setText(daysOfMonth.get(position));
+        }
 
         if(daysOfMonth.get(position) != ""){
-            eventsList = eventDatabase.getEventsInADay(yearMonth.getYear(), yearMonth.getMonthValue(), position);
+            eventsList = eventDatabase.getEventsInADay(yearMonth.getYear(), yearMonth.getMonthValue(), Integer.parseInt(daysOfMonth.get(position)));
 
             try{
                 holder.eventHolder1.setText(eventsList.get(0).getTitle());

@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,19 +30,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.example.calendar.calendar.CalendarFragment;
+import com.example.calendar.database.Event_dbModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -166,13 +160,7 @@ public class CreateEventFragment extends Fragment {
                 textViewStartTime.setText(startEventHour+":"+startEventMinute);
             }
         }, 0, 0, false);
-
-        textViewStartTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startTimePicker.show();
-            }
-        });
+        startTimePicker.setTitle("Select start time");
 
         TimePickerDialog endTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -182,7 +170,14 @@ public class CreateEventFragment extends Fragment {
                 textViewEndTime.setText(endEventHour+":"+endEventMinute);
             }
         }, 0, 0, false);
+        endTimePicker.setTitle("Select end time");
 
+        textViewStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startTimePicker.show();
+            }
+        });
         textViewEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,44 +189,30 @@ public class CreateEventFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
-//                PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-//
-//                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-//
-//                long timeAtButtonClick = System.currentTimeMillis();
-//
-//
-//
-//                alarmManager.set(AlarmManager.RTC_WAKEUP,
-//                        timeAtButtonClick + 50*1000,
-//                        pendingIntent);
+                Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
+                intent.putExtra("title", editTextTitle.getText().toString());
+                intent.putExtra("note", editTextNote.getText().toString());
 
-//                CalendarEventString calendarEventString = new CalendarEventString(
-//                        editTextTitle.getText().toString(),
-//                        editTextDate.getText().toString(),
-//                        textViewStartTime.getText().toString(),
-//                        textViewEndTime.getText().toString(),
-//                        editTextNote.getText().toString(),
-//                        editTextNotifyPrior.getText().toString()
-//                );
-//
-//                String jsonInString = new Gson().toJson(calendarEventString);
-//
-//                SharedPreferences settingsIn = getContext().getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = settingsIn.edit();
-//                editor.putString(System.currentTimeMillis()+"", jsonInString);
-//                editor.apply();
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+                LocalDateTime ldt = LocalDateTime.of(
+                        LocalDate.parse(editTextDate.getText().toString()).getYear(),
+                        LocalDate.parse(editTextDate.getText().toString()).getMonthValue(),
+                        LocalDate.parse(editTextDate.getText().toString()).getDayOfMonth(),
+                        startEventHour,
+                        startEventMinute,
+                        0);
+                ZonedDateTime zdt = ldt.atZone(ZoneId.of("Asia/Colombo"));
+                long startTimeMillis = zdt.toInstant().toEpochMilli();
+
+                alarmManager.set(AlarmManager.RTC_WAKEUP,
+                        startTimeMillis,
+                        pendingIntent);
 
 
                 long notifyPrior = 0;
-
-//                try{
-//                    startTime = LocalTime.parse(textViewStartTime.getText().toString());
-//                    endTime = LocalTime.parse(textViewEndTime.getText().toString());
-//                }catch (DateTimeParseException e){
-//
-//                }
 
                 try{
                     Long.parseLong(editTextNotifyPrior.getText().toString());
@@ -259,9 +240,7 @@ public class CreateEventFragment extends Fragment {
                 Toast.makeText(getActivity(), "Saved", Toast.LENGTH_LONG).show();
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                CalendarFragment calendarFragment;
-
-                calendarFragment = new CalendarFragment();
+                CalendarFragment calendarFragment = new CalendarFragment();
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
 
             }

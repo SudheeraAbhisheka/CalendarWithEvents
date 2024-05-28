@@ -1,10 +1,10 @@
-package com.example.calendar;
+package com.example.calendar.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.calendar.Event_dbSchema.EventsTable;
+import com.example.calendar.database.Event_dbSchema.EventsTable;
 
 public class Event_dbHelper extends SQLiteOpenHelper {
 

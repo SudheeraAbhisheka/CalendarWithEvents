@@ -1,10 +1,13 @@
 package com.example.calendar;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -15,10 +18,16 @@ public class ReminderBroadcast extends BroadcastReceiver {
     private static final int REQUEST_CODE_POST_NOTIFICATIONS = 1;
     @Override
     public void onReceive(Context context, Intent intent) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notifyLemubit")
+        String title = intent.getStringExtra("title");
+        String note = intent.getStringExtra("note");
+
+        Log.d(TAG, "title "+ title);
+        Log.d(TAG, "note" + note);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notify111")
                 .setSmallIcon(R.drawable.alert_icon)
-                .setContentTitle("Reminder")
-                .setContentText("Hello")
+                .setContentTitle(title)
+                .setContentText(note)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

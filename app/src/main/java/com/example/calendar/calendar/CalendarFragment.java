@@ -1,9 +1,5 @@
-package com.example.calendar;
+package com.example.calendar.calendar;
 
-import static android.content.ContentValues.TAG;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,26 +7,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.CreateEventFragment;
+import com.example.calendar.R;
+import com.example.calendar.database.Event_dbModel;
+import com.example.calendar.eventsView.ViewEventsFragment;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,7 +46,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private Event_dbModel eventDatabase;
     Button previousMonthButton;
     Button nextMonthButton;
-    TextView selectedTextTextView;
     Button buttonAddEvent;
     public CalendarFragment() {
         // Required empty public constructor
@@ -118,18 +109,15 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         monthYearText = v.findViewById(R.id.monthYearTV);
         previousMonthButton = v.findViewById(R.id.ButtonPreviousMonth);
         nextMonthButton = v.findViewById(R.id.ButtonNextMonth);
-        selectedTextTextView = v.findViewById(R.id.textViewSelectedDate);
         buttonAddEvent = v.findViewById(R.id.buttonAddEvent);
 
         selectedDate = LocalDate.now();
-        selectedTextTextView.setText(selectedDate.toString());
         setMonthView();
 
         previousMonthButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedDate = selectedDate.minusMonths(1);
-                selectedTextTextView.setText(selectedDate.toString());
                 setMonthView();
             }
         });
@@ -138,7 +126,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             @Override
             public void onClick(View view) {
                 selectedDate = selectedDate.plusMonths(1);
-                selectedTextTextView.setText(selectedDate.toString());
                 setMonthView();
             }
         });
@@ -201,7 +188,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         int daysInMonth = yearMonth.lengthOfMonth();
 
         LocalDate firstOfMonth = selectedDate.withDayOfMonth(1);
-        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
+        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue()-1;
 
         for(int i = 1; i <= 42; i++)
         {
@@ -288,7 +275,15 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     {
         if(selectedDay != 0){
             selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
-            selectedTextTextView.setText(selectedDate.toString());
+
+            ArrayList<CalendarEventOriginal> eventsList =
+                    eventDatabase.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+
+            if(!eventsList.isEmpty()){
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                ViewEventsFragment viewEventsFragment = new ViewEventsFragment(eventsList);
+                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, viewEventsFragment).commit();
+            }
         }
     }
 }
