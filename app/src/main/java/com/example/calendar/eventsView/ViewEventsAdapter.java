@@ -37,13 +37,21 @@ public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder
             holder.note.setText(holidaysList.get(position - eventsList.size()).getNote());
         }
         else{
-            if(eventsList.get(position).getTitle().equals("")){
-                holder.title.setText("No title");
-            }else{
-                holder.title.setText(eventsList.get(position).getTitle());
+            holder.title.setText(eventsList.get(position).getTitle());
+            holder.note.setText(eventsList.get(position).getNote());
+
+            String s;
+            if(eventsList.get(position).getStartTimeHour() != -1){
+                holder.startTime.setVisibility(View.VISIBLE);
+                s = String.format("Start time: %02d:%02d", eventsList.get(position).getStartTimeHour(), eventsList.get(position).getStartTimeMinute());
+                holder.startTime.setText(s);
             }
 
-            holder.note.setText(eventsList.get(position).getNote());
+            if(eventsList.get(position).getEndTimeHour() != -1){
+                holder.endTime.setVisibility(View.VISIBLE);
+                s = String.format("End time: %02d:%02d", eventsList.get(position).getEndTimeHour(), eventsList.get(position).getEndTimeMinute());
+                holder.endTime.setText(s);
+            }
         }
 
     }

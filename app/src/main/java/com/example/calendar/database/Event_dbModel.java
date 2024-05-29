@@ -37,28 +37,15 @@ public class Event_dbModel {
         dataBase.insert(EventsTable.NAME, null, cv);
     }
 
-    public ArrayList<Event> getEvents(int year, int month){
-        ArrayList<Event> eventsList = new ArrayList<>();
+    public void addHoliday(Holiday holiday){
+        ContentValues cv = new ContentValues();
+        cv.put(HolidaysTable.Columns.YEAR, holiday.getYear());
+        cv.put(HolidaysTable.Columns.MONTH, holiday.getMonth());
+        cv.put(HolidaysTable.Columns.DAY, holiday.getDay());
+        cv.put(HolidaysTable.Columns.TITLE, holiday.getTitle());
+        cv.put(HolidaysTable.Columns.NOTE, holiday.getNote());
 
-        Cursor cursor = dataBase.rawQuery("SELECT * FROM "+ Event_dbSchema.EventsTable.NAME +
-                " WHERE " +  EventsTable.Columns.YEAR + " = ? AND " +
-                EventsTable.Columns.MONTH + " = ?",
-                new String[]{year + "", month + ""});
-
-        Event_dbCursor eventDbCursor = new Event_dbCursor(cursor);
-
-        try{
-            eventDbCursor.moveToFirst();
-            while(!eventDbCursor.isAfterLast()){
-                eventsList.add(eventDbCursor.getEvent());
-                eventDbCursor.moveToNext();
-            }
-        }
-        finally {
-            cursor.close();
-        }
-
-        return eventsList;
+        dataBase.insert(HolidaysTable.NAME, null, cv);
     }
 
     public ArrayList<Event> getEventsInADay(int year, int month, int day){
@@ -109,4 +96,5 @@ public class Event_dbModel {
 
         return holidaysList;
     }
+
 }

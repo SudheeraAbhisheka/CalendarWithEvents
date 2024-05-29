@@ -11,10 +11,14 @@ import com.example.calendar.R;
 public class ViewEventsViewHolder extends RecyclerView.ViewHolder {
     public final TextView title;
     public final TextView note;
+    public final TextView startTime;
+    public final TextView endTime;
     public ViewEventsViewHolder(@NonNull View itemView) {
         super(itemView);
 
         title = itemView.findViewById(R.id.viewTitle);
         note = itemView.findViewById(R.id.viewNote);
+        startTime = itemView.findViewById(R.id.textViewStartTimeHolder);
+        endTime = itemView.findViewById(R.id.textViewEndTimeHolder);
     }
 }

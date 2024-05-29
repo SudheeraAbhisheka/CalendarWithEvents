@@ -1,5 +1,7 @@
 package com.example.calendar;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -19,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +45,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,8 +66,8 @@ public class CreateEventFragment extends Fragment {
     private Spinner spinnerNotify;
     private TextView textViewStartTime, textViewEndTime;
     private Button saveButton;
-    private int startEventHour = 0, startEventMinute = 0,
-    endEventHour = 0, endEventMinute = 0;
+    private int startEventHour = -1, startEventMinute = 0,
+    endEventHour = -1, endEventMinute = 0;
     private int notifyPrior = 0;
     private ImageView notifyDateTimeImageView;
     private TextView textViewNotificationDateTime;
@@ -75,9 +77,12 @@ public class CreateEventFragment extends Fragment {
     private int createEventYear;
     private int createEventMonth;
     private int createEventDay;
-    private LocalDate today;
+    private LocalDate selectedDate;
     public CreateEventFragment() {
         // Required empty public constructor
+    }
+    public CreateEventFragment(LocalDate selectedDate) {
+        this.selectedDate = selectedDate;
     }
 
     /**
@@ -133,13 +138,11 @@ public class CreateEventFragment extends Fragment {
         }
         createNotificationChannel();
 
-        today = LocalDate.now();
+        selectDateTextView.setText(selectedDate.toString());
 
-        selectDateTextView.setText(today.toString());
-
-        createEventYear = today.getYear();
-        createEventMonth = today.getMonthValue();
-        createEventDay = today.getDayOfMonth();
+        createEventYear = selectedDate.getYear();
+        createEventMonth = selectedDate.getMonthValue();
+        createEventDay = selectedDate.getDayOfMonth();
         selectDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,12 +150,13 @@ public class CreateEventFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         createEventYear = year;
-                        createEventMonth = month;
+                        createEventMonth = month+1;
                         createEventDay = day;
 
-                        selectDateTextView.setText(LocalDate.of(year, month, day).toString());
+                        selectDateTextView.setText(LocalDate.of(createEventYear, createEventMonth, createEventDay).toString());
                     }
-                }, createEventYear, createEventMonth, createEventDay);
+                }, createEventYear, createEventMonth-1, createEventDay);
+                datePickerDialog.setTitle("Select the notification time");
 
                 datePickerDialog.show();
             }
@@ -163,7 +167,8 @@ public class CreateEventFragment extends Fragment {
             public void onTimeSet(TimePicker timePicker, int i, int ii) {
                 startEventHour = i;
                 startEventMinute = ii;
-                textViewStartTime.setText(startEventHour+":"+startEventMinute);
+                textViewStartTime.setText(String.format("%02d:%02d", startEventHour, startEventMinute));
+                spinnerNotify.setVisibility(View.VISIBLE);
             }
         }, 0, 0, false);
         startTimePicker.setTitle("Select start time");
@@ -173,7 +178,7 @@ public class CreateEventFragment extends Fragment {
             public void onTimeSet(TimePicker timePicker, int i, int ii) {
                 endEventHour = i;
                 endEventMinute = ii;
-                textViewEndTime.setText(endEventHour+":"+endEventMinute);
+                textViewEndTime.setText(String.format("%02d:%02d", endEventHour, endEventMinute));
             }
         }, 0, 0, false);
         endTimePicker.setTitle("Select end time");
@@ -192,7 +197,7 @@ public class CreateEventFragment extends Fragment {
         });
 
         ArrayList<String> a = new ArrayList<>();
-        a.add("Select time");
+        a.add("Notification time");
         a.add("15 minutes before");
         a.add("1 hour before");
         a.add("1 day before");
@@ -241,12 +246,12 @@ public class CreateEventFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         notifyYear = year;
-                        notifyMonth = month;
+                        notifyMonth = month+1;
                         notifyDay = day;
 
                         notificationTime();
                     }
-                }, notifyYear, notifyMonth, notifyDay);
+                }, notifyYear, notifyMonth-1, notifyDay);
 
                 datePickerDialog.show();
             }
@@ -256,30 +261,39 @@ public class CreateEventFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String title;
+
+                if(editTextTitle.getText().toString().equals("")){
+                    title = "No title";
+                }else{
+                    title = editTextTitle.getText().toString();
+                }
+
                 Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
-                intent.setAction("com.example.calendar.ACTION_SHOW_NOTIFICATION");
-                intent.putExtra("title", editTextTitle.getText().toString());
+//                intent.setAction("com.example.calendar.ACTION_SHOW_NOTIFICATION");
+                intent.putExtra("title", title);
                 intent.putExtra("note", editTextNote.getText().toString());
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast( getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast( getContext(), 0, intent, PendingIntent.FLAG_MUTABLE);
 
                 AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
 
                 if(chooseFromDropDown){
                     try{
-                        LocalDateTime ldt = LocalDateTime.of(
+                        LocalDateTime localDateTime = LocalDateTime.of(
                                 createEventYear,
                                 createEventMonth,
                                 createEventDay,
                                 startEventHour,
                                 startEventMinute,
                                 0);
-                        ZonedDateTime zdt = ldt.atZone(ZoneId.of("Asia/Colombo"));
-                        long startTimeMillis = zdt.toInstant().toEpochMilli();
+                        LocalDateTime newDateTime = localDateTime.minusSeconds(notifyPrior * 60);
+                        ZonedDateTime zdt = newDateTime.atZone(ZoneId.of("Asia/Colombo"));
+                        long notifyTimeMillis = zdt.toInstant().toEpochMilli();
 
                         alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                                startTimeMillis + notifyPrior * 60 * 1000,
+                                notifyTimeMillis,
                                 pendingIntent);
 
 
@@ -298,14 +312,6 @@ public class CreateEventFragment extends Fragment {
                     }catch(DateTimeException e){
 
                     }
-                }
-
-                String title;
-
-                if(editTextTitle.getText().toString().equals("")){
-                    title = "No title";
-                }else{
-                    title = editTextTitle.getText().toString();
                 }
 
                 Event_dbModel dbModel = new Event_dbModel();
@@ -363,9 +369,8 @@ public class CreateEventFragment extends Fragment {
                 notifyMinute = minute;
 
                 textViewNotificationDateTime.setText(
-                        String.format("%d:%d %d/%d/%d", notifyHour, notifyMinute, notifyDay, notifyMonth, notifyYear)
+                        String.format("%02d:%02d %02d/%02d/%d", notifyHour, notifyMinute, notifyDay, notifyMonth + 1, notifyYear)
                 );
-
             }
         }, startEventHour, startEventMinute, false);
 

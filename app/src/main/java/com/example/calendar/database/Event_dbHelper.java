@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.calendar.database.Event_dbSchema.EventsTable;
+import com.example.calendar.database.Event_dbSchema.HolidaysTable;
 
 public class Event_dbHelper extends SQLiteOpenHelper {
 
@@ -28,6 +29,13 @@ public class Event_dbHelper extends SQLiteOpenHelper {
                 EventsTable.Columns.NOTIFY_PRIOR + " INTEGER, "+
                 EventsTable.Columns.TITLE + " Text, "+
                 EventsTable.Columns.NOTE+ " Text);");
+
+        sqLiteDatabase.execSQL("create table "+HolidaysTable.NAME+"("+
+                HolidaysTable.Columns.YEAR + " INTEGER, "+
+                HolidaysTable.Columns.MONTH + " INTEGER, "+
+                HolidaysTable.Columns.DAY + " INTEGER, "+
+                HolidaysTable.Columns.TITLE + " Text, "+
+                HolidaysTable.Columns.NOTE+ " Text);");
     }
 
     @Override

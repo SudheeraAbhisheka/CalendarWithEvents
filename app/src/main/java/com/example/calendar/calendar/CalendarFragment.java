@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.calendar.Event;
 import com.example.calendar.CreateEventFragment;
@@ -43,14 +44,16 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
-    private Event_dbModel eventDatabase;
+    private Event_dbModel database;
     Button previousMonthButton;
     Button nextMonthButton;
     Button buttonAddEvent;
     public CalendarFragment() {
         // Required empty public constructor
     }
-
+    public CalendarFragment(LocalDate selectedDate) {
+        this.selectedDate = selectedDate;
+    }
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -77,8 +80,12 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        eventDatabase = new Event_dbModel();
-        eventDatabase.load(getContext());
+        database = new Event_dbModel();
+        database.load(getContext());
+
+        if(database.getHolidaysInADay(2024, 01, 01).isEmpty()){
+            createHolidaysTableOnce();
+        }
 
     }
 
@@ -95,6 +102,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         buttonAddEvent = v.findViewById(R.id.buttonAddEvent);
 
         selectedDate = LocalDate.now();
+
         setMonthView();
 
         previousMonthButton.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +127,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 CreateEventFragment createEventFragment;
 
-                createEventFragment = new CreateEventFragment();
+                createEventFragment = new CreateEventFragment(selectedDate);
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, createEventFragment).commit();
             }
         });
@@ -133,6 +141,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         monthYearText.setText(monthYearFromDate(selectedDate));
 
         CalendarAdapter calendarAdapter = new CalendarAdapter(
+                database,
                 daysInMonthArray(),
                 YearMonth.from(selectedDate),
                 this);
@@ -176,11 +185,12 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     {
         if(selectedDay != 0){
             selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+            Toast.makeText(getActivity(), selectedDate.toString() + " selected", Toast.LENGTH_SHORT).show();
 
             ArrayList<Event> eventsList =
-                    eventDatabase.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+                    database.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
             ArrayList<Holiday> holidaysList =
-                    eventDatabase.getHolidaysInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+                    database.getHolidaysInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
 
             if(!(eventsList.isEmpty() & holidaysList.isEmpty())){
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -188,5 +198,30 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, viewEventsFragment).commit();
             }
         }
+    }
+    private void createHolidaysTableOnce(){
+
+        database.addHoliday(new Holiday(2024, 01, 01, "New Year's Day", "National holiday"));
+        database.addHoliday(new Holiday(2024, 01, 15, "Tamil Thai Pongal Day", "Cultural holiday"));
+        database.addHoliday(new Holiday(2024, 02, 04, "Independence Day", "National holiday"));
+        database.addHoliday(new Holiday(2024, 03, 8, "Mahashivratri", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 03, 29, "Good Friday", "Christian holiday"));
+        database.addHoliday(new Holiday(2024, 03, 31, "Easter Sunday", "Christian holiday"));
+        database.addHoliday(new Holiday(2024, 04, 10, "Bak Full Moon Poya Day", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 04, 13, "Sinhala and Tamil New Year's Eve", "Cultural holiday"));
+        database.addHoliday(new Holiday(2024, 04, 14, "Sinhala and Tamil New Year", "Cultural holiday"));
+        database.addHoliday(new Holiday(2024, 04, 21, "Good Friday", "Christian holiday"));
+        database.addHoliday(new Holiday(2024, 05, 01, "May Day", "National holiday"));
+        database.addHoliday(new Holiday(2024, 05, 23, "Vesak Full Moon Poya Day", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 05, 24, "Day after Vesak Full Moon Poya Day", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 06, 21, "Poson Full Moon Poya Day", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 07, 19, "Eid al-Adha", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 07, 20, "Esala Full Moon Poya Day", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 8, 19, "Raksha Bandhan", "Cultural holiday"));
+        database.addHoliday(new Holiday(2024, 9, 16, "Binara Full Moon Poya Day", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 10, 14, "Vap Full Moon Poya Day", "Religious holiday"));
+        database.addHoliday(new Holiday(2024, 10, 23, "Deepavali", "Cultural holiday"));
+
+
     }
 }

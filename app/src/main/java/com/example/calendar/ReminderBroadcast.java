@@ -25,7 +25,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         String note = intent.getStringExtra("note");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "111E2")
-                .setSmallIcon(R.drawable.alert_icon)
+                .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(title)
                 .setContentText(note)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
