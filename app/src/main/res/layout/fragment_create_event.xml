@@ -34,8 +34,8 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewEventHeading" />
 
     <!-- Date EditText -->
-    <EditText
-        android:id="@+id/editTextDate"
+    <TextView
+        android:id="@+id/textViewSelectDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -56,7 +56,7 @@
         android:layout_marginTop="16dp"
         android:text="Start time"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSelectDate" />
 
     <!-- End Time TextView -->
     <TextView
@@ -126,5 +126,15 @@
         app:layout_constraintHorizontal_bias="0.06"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerNotify" />
+
+    <ImageView
+        android:id="@+id/backButton_fragment_create_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/baseline_keyboard_arrow_left_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

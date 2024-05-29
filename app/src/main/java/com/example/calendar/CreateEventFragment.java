@@ -1,7 +1,5 @@
 package com.example.calendar;
 
-import static android.content.Intent.getIntent;
-
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -15,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -37,11 +36,13 @@ import android.widget.Toast;
 import com.example.calendar.calendar.CalendarFragment;
 import com.example.calendar.database.Event_dbModel;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,8 +59,8 @@ public class CreateEventFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private LocalDate selectedDate;
-    private EditText editTextTitle, editTextDate, editTextNote;
+    private EditText editTextTitle, editTextNote;
+    private TextView selectDateTextView;
     private Spinner spinnerNotify;
     private TextView textViewStartTime, textViewEndTime;
     private Button saveButton;
@@ -70,12 +71,13 @@ public class CreateEventFragment extends Fragment {
     private TextView textViewNotificationDateTime;
     private int notifyYear, notifyMonth, notifyDay, notifyHour, notifyMinute;
     private boolean chooseFromDropDown;
+    private ImageView backButton;
+    private int createEventYear;
+    private int createEventMonth;
+    private int createEventDay;
+    private LocalDate today;
     public CreateEventFragment() {
         // Required empty public constructor
-    }
-
-    public CreateEventFragment(LocalDate selectedDate) {
-        this.selectedDate = selectedDate;
     }
 
     /**
@@ -112,7 +114,7 @@ public class CreateEventFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_create_event, container, false);
 
         editTextTitle = v.findViewById(R.id.editTextTitle);
-        editTextDate = v.findViewById(R.id.editTextDate);
+        selectDateTextView = v.findViewById(R.id.textViewSelectDate);
         textViewStartTime = v.findViewById(R.id.textViewStartTime);
         textViewEndTime = v.findViewById(R.id.textViewEndTime);
         editTextNote = v.findViewById(R.id.editTextNote);
@@ -120,9 +122,7 @@ public class CreateEventFragment extends Fragment {
         saveButton = v.findViewById(R.id.buttonSave);
         notifyDateTimeImageView = v.findViewById(R.id.ImageViewDateTime);
         textViewNotificationDateTime = v.findViewById(R.id.textViewSelectedNotificationDateTime);
-
-        editTextDate.setText(selectedDate + "");
-
+        backButton = v.findViewById(R.id.backButton_fragment_create_event);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.POST_NOTIFICATIONS) !=
@@ -131,31 +131,33 @@ public class CreateEventFragment extends Fragment {
                         new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
             }
         }
-
         createNotificationChannel();
 
-//        // Get current system time
-//        Calendar currentTime = Calendar.getInstance();
-//
-//        mTimePicker = new TimePickerDialog(Take_Away.this,
-//                new TimePickerDialog.OnTimeSetListener() {
-//                    @SuppressLint("SimpleDateFormat")
-//                    @Override
-//                    public void onTimeSet(TimePicker timePicker,
-//                                          int selectedHour, int selectedMinute) {
-//
-//                        Calendar time = Calendar.getInstance();
-//
-//                        time.set(Calendar.HOUR_OF_DAY, selectedHour);
-//
-//                        time.set(Calendar.MINUTE, selectedMinute);
-//                        SimpleDateFormat format = new SimpleDateFormat(
-//                                "hh:mm a");
-//                        textViewStartTime.setText(format.format(time.getTime()));
-//                        hour = selectedHour;
-//                        minute = selectedMinute;
-//                    }
-//                },
+        today = LocalDate.now();
+
+        selectDateTextView.setText(today.toString());
+
+        createEventYear = today.getYear();
+        createEventMonth = today.getMonthValue();
+        createEventDay = today.getDayOfMonth();
+        selectDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        createEventYear = year;
+                        createEventMonth = month;
+                        createEventDay = day;
+
+                        selectDateTextView.setText(LocalDate.of(year, month, day).toString());
+                    }
+                }, createEventYear, createEventMonth, createEventDay);
+
+                datePickerDialog.show();
+            }
+        });
+
         TimePickerDialog startTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int ii) {
@@ -228,6 +230,10 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
+        notifyYear = createEventYear;
+        notifyMonth = createEventMonth;
+        notifyDay = createEventDay;
+
         notifyDateTimeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,7 +246,7 @@ public class CreateEventFragment extends Fragment {
 
                         notificationTime();
                     }
-                }, selectedDate.getYear(), selectedDate.getMonthValue(), selectedDate.getDayOfMonth());
+                }, notifyYear, notifyMonth, notifyDay);
 
                 datePickerDialog.show();
             }
@@ -251,55 +257,69 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
-
-//                intent.putExtra("title", editTextTitle.getText().toString());
-//                intent.putExtra("note", editTextNote.getText().toString());
                 intent.setAction("com.example.calendar.ACTION_SHOW_NOTIFICATION");
-                intent.putExtra("title", "Apple");
-                intent.putExtra("note", "Apple tree");
-
+                intent.putExtra("title", editTextTitle.getText().toString());
+                intent.putExtra("note", editTextNote.getText().toString());
 
                 PendingIntent pendingIntent = PendingIntent.getBroadcast( getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
                 AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
-                LocalDateTime ldt = LocalDateTime.of(
-                        LocalDate.parse(editTextDate.getText().toString()).getYear(),
-                        LocalDate.parse(editTextDate.getText().toString()).getMonthValue(),
-                        LocalDate.parse(editTextDate.getText().toString()).getDayOfMonth(),
-                        startEventHour,
-                        startEventMinute,
-                        0);
-                ZonedDateTime zdt = ldt.atZone(ZoneId.of("Asia/Colombo"));
-                long startTimeMillis = zdt.toInstant().toEpochMilli();
 
                 if(chooseFromDropDown){
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                            startTimeMillis + notifyPrior * 60 * 1000,
-                            pendingIntent);
+                    try{
+                        LocalDateTime ldt = LocalDateTime.of(
+                                createEventYear,
+                                createEventMonth,
+                                createEventDay,
+                                startEventHour,
+                                startEventMinute,
+                                0);
+                        ZonedDateTime zdt = ldt.atZone(ZoneId.of("Asia/Colombo"));
+                        long startTimeMillis = zdt.toInstant().toEpochMilli();
+
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                                startTimeMillis + notifyPrior * 60 * 1000,
+                                pendingIntent);
+
+
+                    }catch(DateTimeException e){
+
+                    }
                 }
                 else{
-                    LocalDateTime localDateTime = LocalDateTime.of(notifyYear, notifyMonth, notifyDay, notifyHour, notifyMinute, 0);
-                    ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Asia/Colombo"));
-                    long startTime = zonedDateTime.toInstant().toEpochMilli();
+                    try{
+                        LocalDateTime localDateTime = LocalDateTime.of(notifyYear, notifyMonth, notifyDay, notifyHour, notifyMinute, 0);
+                        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Asia/Colombo"));
+                        long startTime = zonedDateTime.toInstant().toEpochMilli();
 
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                            startTime,
-                            pendingIntent);
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startTime, pendingIntent);
+
+                    }catch(DateTimeException e){
+
+                    }
+                }
+
+                String title;
+
+                if(editTextTitle.getText().toString().equals("")){
+                    title = "No title";
+                }else{
+                    title = editTextTitle.getText().toString();
                 }
 
                 Event_dbModel dbModel = new Event_dbModel();
                 dbModel.load(getContext());
                 dbModel.addEvent(new Event(
-                        LocalDate.parse(editTextDate.getText().toString()).getYear(),
-                        LocalDate.parse(editTextDate.getText().toString()).getMonthValue(),
-                        LocalDate.parse(editTextDate.getText().toString()).getDayOfMonth(),
+                        createEventYear,
+                        createEventMonth,
+                        createEventDay,
                         startEventHour,
                         startEventMinute,
                         endEventHour,
                         endEventMinute,
                         notifyPrior,
-                        editTextTitle.getText().toString(),
+                        title,
                         editTextNote.getText().toString()
                 ));
 
@@ -312,6 +332,25 @@ public class CreateEventFragment extends Fragment {
 
             }
         });
+
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CalendarFragment calendarFragment = new CalendarFragment();
+                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
+            }
+        });
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CalendarFragment calendarFragment = new CalendarFragment();
+                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
         return v;
     }
@@ -335,10 +374,10 @@ public class CreateEventFragment extends Fragment {
 
 
     private void createNotificationChannel(){
-        CharSequence name = "LemubitReminderChannel";
-        String description = "Channel for Lemubit Reminder";
+        CharSequence name = "Notification channel";
+        String description = "Calendar events notification";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel("notifyLemubit", name, importance);
+        NotificationChannel channel = new NotificationChannel("111E2", name, importance);
         channel.setDescription(description);
 
         NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);

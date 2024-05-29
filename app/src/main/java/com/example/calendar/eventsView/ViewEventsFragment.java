@@ -2,18 +2,22 @@ package com.example.calendar.eventsView;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.calendar.Event;
 import com.example.calendar.Holiday;
 import com.example.calendar.R;
+import com.example.calendar.calendar.CalendarFragment;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +27,7 @@ import java.util.ArrayList;
  * Use the {@link ViewEventsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewEventsFragment extends Fragment implements ViewEventsAdapter.OnItemListener{
+public class ViewEventsFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,6 +41,7 @@ public class ViewEventsFragment extends Fragment implements ViewEventsAdapter.On
     ArrayList<Holiday> holidaysList;
     TextView dateTextView;
     LocalDate selectedDate;
+    ImageView backButton;
 
     public ViewEventsFragment() {
         // Required empty public constructor
@@ -82,6 +87,8 @@ public class ViewEventsFragment extends Fragment implements ViewEventsAdapter.On
         View v = inflater.inflate(R.layout.fragment_view_events, container, false);
 
         dateTextView = v.findViewById(R.id.textViewDate);
+        backButton = v.findViewById(R.id.backButton_fragment_view_events);
+
         dateTextView.setText(selectedDate.toString());
 
         RecyclerView rv = v.findViewById(R.id.ViewEventsRecyclerView);
@@ -89,11 +96,24 @@ public class ViewEventsFragment extends Fragment implements ViewEventsAdapter.On
         ViewEventsAdapter viewEventsAdapter = new ViewEventsAdapter(eventsList, holidaysList);
         rv.setAdapter(viewEventsAdapter);
 
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CalendarFragment calendarFragment = new CalendarFragment();
+                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
+            }
+        });
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                CalendarFragment calendarFragment = new CalendarFragment();
+                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+
         return v;
-    }
-
-    @Override
-    public void onItemClick() {
-
     }
 }

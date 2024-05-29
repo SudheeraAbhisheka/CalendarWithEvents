@@ -40,6 +40,6 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.
         }catch (NumberFormatException e){
 
         }
-        onItemListener.onItemClick(getAdapterPosition(), i);
+        onItemListener.onItemClick(i);
     }
 }

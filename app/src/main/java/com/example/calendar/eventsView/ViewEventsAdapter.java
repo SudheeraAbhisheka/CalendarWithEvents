@@ -14,7 +14,6 @@ import com.example.calendar.R;
 import java.util.ArrayList;
 
 public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder> {
-    private final OnItemListener onItemListener = null;
     private ArrayList<Event> eventsList;
     private ArrayList<Holiday> holidaysList;
     public ViewEventsAdapter(ArrayList<Event> eventsList, ArrayList<Holiday> holidaysList){
@@ -27,7 +26,7 @@ public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.event_cell,parent,false);
 
-        return new ViewEventsViewHolder(view, onItemListener);
+        return new ViewEventsViewHolder(view);
 
     }
 
@@ -38,7 +37,12 @@ public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder
             holder.note.setText(holidaysList.get(position - eventsList.size()).getNote());
         }
         else{
-            holder.title.setText(eventsList.get(position).getTitle());
+            if(eventsList.get(position).getTitle().equals("")){
+                holder.title.setText("No title");
+            }else{
+                holder.title.setText(eventsList.get(position).getTitle());
+            }
+
             holder.note.setText(eventsList.get(position).getNote());
         }
 
@@ -47,9 +51,5 @@ public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder
     @Override
     public int getItemCount() {
         return eventsList.size() + holidaysList.size();
-    }
-    public interface  OnItemListener
-    {
-        void onItemClick();
     }
 }

@@ -18,14 +18,14 @@ public class Event_dbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         sqLiteDatabase.execSQL("create table "+EventsTable.NAME+"("+
-                EventsTable.Columns.YEAR + " Text, "+
-                EventsTable.Columns.MONTH + " Text, "+
-                EventsTable.Columns.DAY + " Text, "+
-                EventsTable.Columns.START_TIME_HOUR + " Text, "+
-                EventsTable.Columns.START_TIME_MINUTE + " Text, "+
-                EventsTable.Columns.END_TIME_HOUR + " Text, "+
-                EventsTable.Columns.END_TIME_MINUTE + " Text, "+
-                EventsTable.Columns.NOTIFY_PRIOR + " Text, "+
+                EventsTable.Columns.YEAR + " INTEGER, "+
+                EventsTable.Columns.MONTH + " INTEGER, "+
+                EventsTable.Columns.DAY + " INTEGER, "+
+                EventsTable.Columns.START_TIME_HOUR + " INTEGER, "+
+                EventsTable.Columns.START_TIME_MINUTE + " INTEGER, "+
+                EventsTable.Columns.END_TIME_HOUR + " INTEGER, "+
+                EventsTable.Columns.END_TIME_MINUTE + " INTEGER, "+
+                EventsTable.Columns.NOTIFY_PRIOR + " INTEGER, "+
                 EventsTable.Columns.TITLE + " Text, "+
                 EventsTable.Columns.NOTE+ " Text);");
     }

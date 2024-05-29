@@ -24,7 +24,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
     private Event_dbModel eventDatabase;
     private YearMonth yearMonth;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, YearMonth yearMonth, ArrayList<Event> eventsList, OnItemListener onItemListener)
+    public CalendarAdapter(ArrayList<String> daysOfMonth, YearMonth yearMonth, OnItemListener onItemListener)
     {
         this.daysOfMonth = daysOfMonth;
         this.yearMonth = yearMonth;
@@ -116,6 +116,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
 
     public interface  OnItemListener
     {
-        void onItemClick(int position, int selectedDay);
+        void onItemClick(int selectedDay);
     }
 }

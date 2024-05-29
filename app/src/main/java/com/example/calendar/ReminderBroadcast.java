@@ -24,7 +24,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         String title = intent.getStringExtra("title");
         String note = intent.getStringExtra("note");
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notify111")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "111E2")
                 .setSmallIcon(R.drawable.alert_icon)
                 .setContentTitle(title)
                 .setContentText(note)
