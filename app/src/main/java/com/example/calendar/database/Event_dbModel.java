@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Holiday;
 import com.example.calendar.database.Event_dbSchema.EventsTable;
+import com.example.calendar.database.Event_dbSchema.HolidaysTable;
 
 import java.util.ArrayList;
 
@@ -82,5 +84,29 @@ public class Event_dbModel {
         }
 
         return eventsList;
+    }
+    public ArrayList<Holiday> getHolidaysInADay(int year, int month, int day){
+        ArrayList<Holiday> holidaysList = new ArrayList<>();
+
+        Cursor cursor = dataBase.rawQuery("SELECT * FROM "+ Event_dbSchema.HolidaysTable.NAME +
+                        " WHERE " +  HolidaysTable.Columns.YEAR + " = ? AND " +
+                        HolidaysTable.Columns.MONTH + " = ? AND " +
+                        HolidaysTable.Columns.DAY + " = ?",
+                new String[]{year + "", month + "", day + ""});
+
+        Event_dbCursor eventDbCursor = new Event_dbCursor(cursor);
+
+        try{
+            eventDbCursor.moveToFirst();
+            while(!eventDbCursor.isAfterLast()){
+                holidaysList.add(eventDbCursor.getHoliday());
+                eventDbCursor.moveToNext();
+            }
+        }
+        finally {
+            cursor.close();
+        }
+
+        return holidaysList;
     }
 }

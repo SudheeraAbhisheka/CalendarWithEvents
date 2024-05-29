@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 
 import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Holiday;
 import com.example.calendar.database.Event_dbSchema.EventsTable;
 
 public class Event_dbCursor extends CursorWrapper {
@@ -33,6 +34,15 @@ public class Event_dbCursor extends CursorWrapper {
             notifyPrior,
             getString(getColumnIndex(EventsTable.Columns.TITLE)),
             getString(getColumnIndex(EventsTable.Columns.NOTE))
+        );
+    }
+    public Holiday getHoliday(){
+        return new Holiday(
+                getInt(getColumnIndex(Event_dbSchema.HolidaysTable.Columns.YEAR)),
+                getInt(getColumnIndex(Event_dbSchema.HolidaysTable.Columns.MONTH)),
+                getInt(getColumnIndex(Event_dbSchema.HolidaysTable.Columns.DAY)),
+                getString(getColumnIndex(Event_dbSchema.HolidaysTable.Columns.TITLE)),
+                getString(getColumnIndex(Event_dbSchema.HolidaysTable.Columns.NOTE))
         );
     }
 }

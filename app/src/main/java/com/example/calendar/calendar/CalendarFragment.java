@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.calendar.CalendarEventOriginal;
 import com.example.calendar.CreateEventFragment;
+import com.example.calendar.Holiday;
 import com.example.calendar.R;
 import com.example.calendar.database.Event_dbModel;
 import com.example.calendar.eventsView.ViewEventsFragment;
@@ -278,10 +279,12 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
             ArrayList<CalendarEventOriginal> eventsList =
                     eventDatabase.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+            ArrayList<Holiday> holidaysList =
+                    eventDatabase.getHolidaysInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
 
-            if(!eventsList.isEmpty()){
+            if(!(eventsList.isEmpty() & holidaysList.isEmpty())){
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                ViewEventsFragment viewEventsFragment = new ViewEventsFragment(eventsList);
+                ViewEventsFragment viewEventsFragment = new ViewEventsFragment(selectedDate, eventsList, holidaysList);
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, viewEventsFragment).commit();
             }
         }

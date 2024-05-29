@@ -33,80 +33,40 @@ public class CalendarEventOriginal {
         return year;
     }
 
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public int getMonth() {
         return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
     }
 
     public int getDay() {
         return day;
     }
 
-    public void setDay(int day) {
-        this.day = day;
-    }
-
     public int getStartTimeHour() {
         return startTimeHour;
-    }
-
-    public void setStartTimeHour(int startTimeHour) {
-        this.startTimeHour = startTimeHour;
     }
 
     public int getStartTimeMinute() {
         return startTimeMinute;
     }
 
-    public void setStartTimeMinute(int startTimeMinute) {
-        this.startTimeMinute = startTimeMinute;
-    }
-
     public int getEndTimeHour() {
         return endTimeHour;
-    }
-
-    public void setEndTimeHour(int endTimeHour) {
-        this.endTimeHour = endTimeHour;
     }
 
     public int getEndTimeMinute() {
         return endTimeMinute;
     }
 
-    public void setEndTimeMinute(int endTimeMinute) {
-        this.endTimeMinute = endTimeMinute;
-    }
-
     public long getNotifyPrior() {
         return notifyPrior;
-    }
-
-    public void setNotifyPrior(long notifyPrior) {
-        this.notifyPrior = notifyPrior;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getNote() {
         return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
     }
 }
 

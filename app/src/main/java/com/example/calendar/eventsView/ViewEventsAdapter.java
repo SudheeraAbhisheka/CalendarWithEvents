@@ -1,5 +1,8 @@
 package com.example.calendar.eventsView;
 
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,16 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Holiday;
 import com.example.calendar.R;
 
 import java.util.ArrayList;
 
 public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder> {
     private final OnItemListener onItemListener = null;
-    private CalendarEventOriginal event;
-    private ArrayList<CalendarEventOriginal> eventsArray;
-    public ViewEventsAdapter(ArrayList<CalendarEventOriginal> eventsArray){
-        this.eventsArray = eventsArray;
+    private ArrayList<CalendarEventOriginal> eventsList;
+    private ArrayList<Holiday> holidaysList;
+    public ViewEventsAdapter(ArrayList<CalendarEventOriginal> eventsList, ArrayList<Holiday> holidaysList){
+        this.eventsList = eventsList;
+        this.holidaysList = holidaysList;
     }
     @NonNull
     @Override
@@ -31,13 +36,20 @@ public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewEventsViewHolder holder, int position) {
-        holder.title.setText(eventsArray.get(position).getTitle());
-        holder.note.setText(eventsArray.get(position).getNote());
+        if(position >= eventsList.size()){
+            holder.title.setText(holidaysList.get(position - eventsList.size()).getTitle());
+            holder.note.setText(holidaysList.get(position - eventsList.size()).getNote());
+        }
+        else{
+            holder.title.setText(eventsList.get(position).getTitle());
+            holder.note.setText(eventsList.get(position).getNote());
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return eventsArray.size();
+        return eventsList.size() + holidaysList.size();
     }
     public interface  OnItemListener
     {

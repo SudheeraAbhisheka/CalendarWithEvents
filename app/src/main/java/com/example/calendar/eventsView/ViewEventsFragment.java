@@ -10,10 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Holiday;
 import com.example.calendar.R;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
@@ -33,13 +36,18 @@ public class ViewEventsFragment extends Fragment implements ViewEventsAdapter.On
     private String mParam1;
     private String mParam2;
     ArrayList<CalendarEventOriginal> eventsList;
+    ArrayList<Holiday> holidaysList;
+    TextView dateTextView;
+    LocalDate selectedDate;
 
     public ViewEventsFragment() {
         // Required empty public constructor
     }
 
-    public ViewEventsFragment(ArrayList<CalendarEventOriginal> eventsList){
+    public ViewEventsFragment(LocalDate selectedDate, ArrayList<CalendarEventOriginal> eventsList, ArrayList<Holiday> holidaysList){
+        this.selectedDate = selectedDate;
         this.eventsList = eventsList;
+        this.holidaysList = holidaysList;
     }
 
     /**
@@ -75,9 +83,12 @@ public class ViewEventsFragment extends Fragment implements ViewEventsAdapter.On
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_view_events, container, false);
 
+        dateTextView = v.findViewById(R.id.textViewDate);
+        dateTextView.setText(selectedDate.toString());
+
         RecyclerView rv = v.findViewById(R.id.ViewEventsRecyclerView);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        ViewEventsAdapter viewEventsAdapter = new ViewEventsAdapter(eventsList);
+        ViewEventsAdapter viewEventsAdapter = new ViewEventsAdapter(eventsList, holidaysList);
         rv.setAdapter(viewEventsAdapter);
 
         return v;

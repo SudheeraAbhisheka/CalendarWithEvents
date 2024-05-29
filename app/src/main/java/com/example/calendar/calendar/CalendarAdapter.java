@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Holiday;
 import com.example.calendar.R;
 import com.example.calendar.database.Event_dbModel;
 
@@ -19,6 +20,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
 {
     private final ArrayList<String> daysOfMonth;
     private ArrayList<CalendarEventOriginal> eventsList;
+    private ArrayList<Holiday> holidaysList;
     private final OnItemListener onItemListener;
     private Event_dbModel eventDatabase;
     private YearMonth yearMonth;
@@ -52,7 +54,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
     {
         if(daysOfMonth.get(position) == ""){
             holder.constraintLayout.setBackgroundResource(android.R.color.transparent);
-//            holder.dayOfMonth.tex
         }
         else{
             holder.dayOfMonth.setText(daysOfMonth.get(position));
@@ -60,17 +61,49 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
 
         if(daysOfMonth.get(position) != ""){
             eventsList = eventDatabase.getEventsInADay(yearMonth.getYear(), yearMonth.getMonthValue(), Integer.parseInt(daysOfMonth.get(position)));
+            holidaysList = eventDatabase.getHolidaysInADay(yearMonth.getYear(), yearMonth.getMonthValue(), Integer.parseInt(daysOfMonth.get(position)));
 
             try{
-                holder.eventHolder1.setText(eventsList.get(0).getTitle());
-                holder.eventHolder2.setText(eventsList.get(1).getTitle());
-                holder.eventHolder3.setText(eventsList.get(2).getTitle());
+                if(eventsList.size() == 0){
+                    if(holidaysList.size() == 1){
+                        holder.eventHolder1.setText(holidaysList.get(0).getTitle());
+                    }
+                    else if(holidaysList.size() == 2){
+                        holder.eventHolder2.setText(holidaysList.get(1).getTitle());
+                    }
+                    else if(holidaysList.size() == 3){
+                        holder.eventHolder3.setText(holidaysList.get(2).getTitle());
+                    }
+                }
+                else if(eventsList.size() == 1){
+                    holder.eventHolder1.setText(eventsList.get(0).getTitle());
+
+                    if(holidaysList.size() == 1){
+                        holder.eventHolder2.setText(holidaysList.get(0).getTitle());
+                    }
+                    else if(holidaysList.size() == 2){
+                        holder.eventHolder3.setText(holidaysList.get(1).getTitle());
+                    }
+                }
+                else if(eventsList.size() == 2){
+                    holder.eventHolder1.setText(eventsList.get(0).getTitle());
+                    holder.eventHolder2.setText(eventsList.get(1).getTitle());
+
+                    if(holidaysList.size() == 1){
+                        holder.eventHolder3.setText(holidaysList.get(0).getTitle());
+                    }
+                }
+                else if(eventsList.size() == 3){
+                    holder.eventHolder1.setText(eventsList.get(0).getTitle());
+                    holder.eventHolder2.setText(eventsList.get(1).getTitle());
+                    holder.eventHolder3.setText(eventsList.get(2).getTitle());
+                }
 
             }catch (IndexOutOfBoundsException e){
 
             }
 
-            if(eventsList.size() >= 3){
+            if(eventsList.size() + holidaysList.size() >= 3){
                 holder.eventHolder_more.setText("....");
             }
         }
