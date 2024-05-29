@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Event;
 import com.example.calendar.Holiday;
 import com.example.calendar.database.Event_dbSchema.EventsTable;
 import com.example.calendar.database.Event_dbSchema.HolidaysTable;
@@ -22,7 +22,7 @@ public class Event_dbModel {
         this.dataBase = new Event_dbHelper(theContext).getWritableDatabase();
     }
 
-    public void addEvent(CalendarEventOriginal event){
+    public void addEvent(Event event){
         ContentValues cv = new ContentValues();
         cv.put(EventsTable.Columns.YEAR, event.getYear());
         cv.put(EventsTable.Columns.MONTH, event.getMonth());
@@ -37,8 +37,8 @@ public class Event_dbModel {
         dataBase.insert(EventsTable.NAME, null, cv);
     }
 
-    public ArrayList<CalendarEventOriginal> getEvents(int year, int month){
-        ArrayList<CalendarEventOriginal> eventsList = new ArrayList<>();
+    public ArrayList<Event> getEvents(int year, int month){
+        ArrayList<Event> eventsList = new ArrayList<>();
 
         Cursor cursor = dataBase.rawQuery("SELECT * FROM "+ Event_dbSchema.EventsTable.NAME +
                 " WHERE " +  EventsTable.Columns.YEAR + " = ? AND " +
@@ -61,8 +61,8 @@ public class Event_dbModel {
         return eventsList;
     }
 
-    public ArrayList<CalendarEventOriginal> getEventsInADay(int year, int month, int day){
-        ArrayList<CalendarEventOriginal> eventsList = new ArrayList<>();
+    public ArrayList<Event> getEventsInADay(int year, int month, int day){
+        ArrayList<Event> eventsList = new ArrayList<>();
 
         Cursor cursor = dataBase.rawQuery("SELECT * FROM "+ Event_dbSchema.EventsTable.NAME +
                         " WHERE " +  EventsTable.Columns.YEAR + " = ? AND " +

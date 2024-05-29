@@ -1,8 +1,5 @@
 package com.example.calendar.eventsView;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Event;
 import com.example.calendar.Holiday;
 import com.example.calendar.R;
 
@@ -18,9 +15,9 @@ import java.util.ArrayList;
 
 public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder> {
     private final OnItemListener onItemListener = null;
-    private ArrayList<CalendarEventOriginal> eventsList;
+    private ArrayList<Event> eventsList;
     private ArrayList<Holiday> holidaysList;
-    public ViewEventsAdapter(ArrayList<CalendarEventOriginal> eventsList, ArrayList<Holiday> holidaysList){
+    public ViewEventsAdapter(ArrayList<Event> eventsList, ArrayList<Holiday> holidaysList){
         this.eventsList = eventsList;
         this.holidaysList = holidaysList;
     }

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Event;
 import com.example.calendar.CreateEventFragment;
 import com.example.calendar.Holiday;
 import com.example.calendar.R;
@@ -43,7 +43,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
-    private ArrayList<CalendarEventOriginal> eventsList;
+    private ArrayList<Event> eventsList;
     private Event_dbModel eventDatabase;
     Button previousMonthButton;
     Button nextMonthButton;
@@ -204,9 +204,9 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         }
         return  daysInMonthArray;
     }
-    private ArrayList<CalendarEventOriginal> eventsInMonthArray(ArrayList<CalendarEventOriginal> eventsArray)
+    private ArrayList<Event> eventsInMonthArray(ArrayList<Event> eventsArray)
     {
-        ArrayList<CalendarEventOriginal> eventsInMonthArray = new ArrayList<>();
+        ArrayList<Event> eventsInMonthArray = new ArrayList<>();
         YearMonth yearMonth = YearMonth.from(selectedDate);
 
         int daysInMonth = yearMonth.lengthOfMonth();
@@ -222,7 +222,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             }
             else
             {
-                for(CalendarEventOriginal c : eventsArray){
+                for(Event c : eventsArray){
                     if(c.getDay() == i - dayOfWeek){
                         eventsInMonthArray.add(c);
                     }
@@ -277,7 +277,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         if(selectedDay != 0){
             selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
 
-            ArrayList<CalendarEventOriginal> eventsList =
+            ArrayList<Event> eventsList =
                     eventDatabase.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
             ArrayList<Holiday> holidaysList =
                     eventDatabase.getHolidaysInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);

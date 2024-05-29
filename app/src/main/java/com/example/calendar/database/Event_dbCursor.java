@@ -3,7 +3,7 @@ package com.example.calendar.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Event;
 import com.example.calendar.Holiday;
 import com.example.calendar.database.Event_dbSchema.EventsTable;
 
@@ -13,17 +13,17 @@ public class Event_dbCursor extends CursorWrapper {
         super(cursor);
     }
 
-    public CalendarEventOriginal getEvent(){
+    public Event getEvent(){
         long notifyPrior = 0;
 
         try{
-            notifyPrior = Long.parseLong( getString(getColumnIndex(EventsTable.Columns.NOTIFY_PRIOR)));
+            notifyPrior = Integer.parseInt( getString(getColumnIndex(EventsTable.Columns.NOTIFY_PRIOR)));
 
         }catch (NumberFormatException e){
 
         }
 
-        return new CalendarEventOriginal(
+        return new Event(
             getInt(getColumnIndex(EventsTable.Columns.YEAR)),
             getInt(getColumnIndex(EventsTable.Columns.MONTH)),
             getInt(getColumnIndex(EventsTable.Columns.DAY)),
@@ -31,7 +31,7 @@ public class Event_dbCursor extends CursorWrapper {
             getInt(getColumnIndex(EventsTable.Columns.START_TIME_MINUTE)),
             getInt(getColumnIndex(EventsTable.Columns.END_TIME_HOUR)),
             getInt(getColumnIndex(EventsTable.Columns.END_TIME_MINUTE)),
-            notifyPrior,
+            getInt(getColumnIndex(EventsTable.Columns.NOTIFY_PRIOR)),
             getString(getColumnIndex(EventsTable.Columns.TITLE)),
             getString(getColumnIndex(EventsTable.Columns.NOTE))
         );

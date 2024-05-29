@@ -1,10 +1,6 @@
 package com.example.calendar;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.YearMonth;
-
-public class CalendarEventOriginal {
+public class Event {
     private int year;
     private int month;
     private int day;
@@ -12,11 +8,11 @@ public class CalendarEventOriginal {
     private int startTimeMinute;
     private int endTimeHour;
     private int endTimeMinute;
-    private long notifyPrior;
+    private int notifyPrior;
     private String title;
     private String note;
 
-    public CalendarEventOriginal(int year, int month, int day, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, long notifyPrior, String title, String note) {
+    public Event(int year, int month, int day, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int notifyPrior, String title, String note) {
         this.year = year;
         this.month = month;
         this.day = day;
@@ -57,7 +53,7 @@ public class CalendarEventOriginal {
         return endTimeMinute;
     }
 
-    public long getNotifyPrior() {
+    public int getNotifyPrior() {
         return notifyPrior;
     }
 

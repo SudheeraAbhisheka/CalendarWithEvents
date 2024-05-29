@@ -1,16 +1,16 @@
 package com.example.calendar;
 
-import static android.content.ContentValues.TAG;
+import static android.content.Intent.getIntent;
 
 import android.Manifest;
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,12 +20,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -35,9 +39,9 @@ import com.example.calendar.database.Event_dbModel;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,11 +59,17 @@ public class CreateEventFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private LocalDate selectedDate;
-    private EditText editTextTitle, editTextDate, editTextNote, editTextNotifyPrior;
+    private EditText editTextTitle, editTextDate, editTextNote;
+    private Spinner spinnerNotify;
     private TextView textViewStartTime, textViewEndTime;
     private Button saveButton;
     private int startEventHour = 0, startEventMinute = 0,
     endEventHour = 0, endEventMinute = 0;
+    private int notifyPrior = 0;
+    private ImageView notifyDateTimeImageView;
+    private TextView textViewNotificationDateTime;
+    private int notifyYear, notifyMonth, notifyDay, notifyHour, notifyMinute;
+    private boolean chooseFromDropDown;
     public CreateEventFragment() {
         // Required empty public constructor
     }
@@ -106,8 +116,10 @@ public class CreateEventFragment extends Fragment {
         textViewStartTime = v.findViewById(R.id.textViewStartTime);
         textViewEndTime = v.findViewById(R.id.textViewEndTime);
         editTextNote = v.findViewById(R.id.editTextNote);
-        editTextNotifyPrior = v.findViewById(R.id.editTextNotifyPrior);
+        spinnerNotify = v.findViewById(R.id.spinnerNotify);
         saveButton = v.findViewById(R.id.buttonSave);
+        notifyDateTimeImageView = v.findViewById(R.id.ImageViewDateTime);
+        textViewNotificationDateTime = v.findViewById(R.id.textViewSelectedNotificationDateTime);
 
         editTextDate.setText(selectedDate + "");
 
@@ -144,14 +156,6 @@ public class CreateEventFragment extends Fragment {
 //                        minute = selectedMinute;
 //                    }
 //                },
-//
-//                currentTime.get(Calendar.HOUR_OF_DAY), // Current hour value
-//                currentTime.get(Calendar.MINUTE), // Current minute value
-//                DateFormat.is24HourFormat()); // Check 24 Hour or AM/PM format
-//
-//        mTimePicker.setTitle("Select Time");
-//        mTimePicker.show();
-
         TimePickerDialog startTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int ii) {
@@ -185,15 +189,77 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
+        ArrayList<String> a = new ArrayList<>();
+        a.add("Select time");
+        a.add("15 minutes before");
+        a.add("1 hour before");
+        a.add("1 day before");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, a);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerNotify.setAdapter(arrayAdapter);
+
+
+        spinnerNotify.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i == 0){
+                    chooseFromDropDown = false;
+                    notifyPrior = 0;
+                    notifyDateTimeImageView.setVisibility(View.VISIBLE);
+                }else if(i == 1){
+                    chooseFromDropDown = true;
+                    notifyPrior = 15;
+                    notifyDateTimeImageView.setVisibility(View.GONE);
+                }else if(i == 2){
+                    chooseFromDropDown = true;
+                    notifyPrior = 60;
+                    notifyDateTimeImageView.setVisibility(View.GONE);
+                }else if(i == 3){
+                    chooseFromDropDown = true;
+                    notifyPrior = 60 * 24;
+                    notifyDateTimeImageView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        notifyDateTimeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        notifyYear = year;
+                        notifyMonth = month;
+                        notifyDay = day;
+
+                        notificationTime();
+                    }
+                }, selectedDate.getYear(), selectedDate.getMonthValue(), selectedDate.getDayOfMonth());
+
+                datePickerDialog.show();
+            }
+        });
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
-                intent.putExtra("title", editTextTitle.getText().toString());
-                intent.putExtra("note", editTextNote.getText().toString());
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//                intent.putExtra("title", editTextTitle.getText().toString());
+//                intent.putExtra("note", editTextNote.getText().toString());
+                intent.setAction("com.example.calendar.ACTION_SHOW_NOTIFICATION");
+                intent.putExtra("title", "Apple");
+                intent.putExtra("note", "Apple tree");
+
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast( getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
                 AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
@@ -207,23 +273,24 @@ public class CreateEventFragment extends Fragment {
                 ZonedDateTime zdt = ldt.atZone(ZoneId.of("Asia/Colombo"));
                 long startTimeMillis = zdt.toInstant().toEpochMilli();
 
-                alarmManager.set(AlarmManager.RTC_WAKEUP,
-                        startTimeMillis,
-                        pendingIntent);
+                if(chooseFromDropDown){
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                            startTimeMillis + notifyPrior * 60 * 1000,
+                            pendingIntent);
+                }
+                else{
+                    LocalDateTime localDateTime = LocalDateTime.of(notifyYear, notifyMonth, notifyDay, notifyHour, notifyMinute, 0);
+                    ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Asia/Colombo"));
+                    long startTime = zonedDateTime.toInstant().toEpochMilli();
 
-
-                long notifyPrior = 0;
-
-                try{
-                    Long.parseLong(editTextNotifyPrior.getText().toString());
-
-                }catch (NumberFormatException e){
-
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                            startTime,
+                            pendingIntent);
                 }
 
                 Event_dbModel dbModel = new Event_dbModel();
                 dbModel.load(getContext());
-                dbModel.addEvent(new CalendarEventOriginal(
+                dbModel.addEvent(new Event(
                         LocalDate.parse(editTextDate.getText().toString()).getYear(),
                         LocalDate.parse(editTextDate.getText().toString()).getMonthValue(),
                         LocalDate.parse(editTextDate.getText().toString()).getDayOfMonth(),
@@ -248,6 +315,24 @@ public class CreateEventFragment extends Fragment {
 
         return v;
     }
+
+    private void notificationTime(){
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                notifyHour = hour;
+                notifyMinute = minute;
+
+                textViewNotificationDateTime.setText(
+                        String.format("%d:%d %d/%d/%d", notifyHour, notifyMinute, notifyDay, notifyMonth, notifyYear)
+                );
+
+            }
+        }, startEventHour, startEventMinute, false);
+
+        timePickerDialog.show();
+    }
+
 
     private void createNotificationChannel(){
         CharSequence name = "LemubitReminderChannel";

@@ -5,10 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Event;
 import com.example.calendar.Holiday;
 import com.example.calendar.R;
 import com.example.calendar.database.Event_dbModel;
@@ -19,13 +18,13 @@ import java.util.ArrayList;
 class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
 {
     private final ArrayList<String> daysOfMonth;
-    private ArrayList<CalendarEventOriginal> eventsList;
+    private ArrayList<Event> eventsList;
     private ArrayList<Holiday> holidaysList;
     private final OnItemListener onItemListener;
     private Event_dbModel eventDatabase;
     private YearMonth yearMonth;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, YearMonth yearMonth, ArrayList<CalendarEventOriginal> eventsList, OnItemListener onItemListener)
+    public CalendarAdapter(ArrayList<String> daysOfMonth, YearMonth yearMonth, ArrayList<Event> eventsList, OnItemListener onItemListener)
     {
         this.daysOfMonth = daysOfMonth;
         this.yearMonth = yearMonth;
@@ -93,7 +92,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
                         holder.eventHolder3.setText(holidaysList.get(0).getTitle());
                     }
                 }
-                else if(eventsList.size() == 3){
+                else if(eventsList.size() >= 3){
                     holder.eventHolder1.setText(eventsList.get(0).getTitle());
                     holder.eventHolder2.setText(eventsList.get(1).getTitle());
                     holder.eventHolder3.setText(eventsList.get(2).getTitle());

@@ -3,7 +3,6 @@ package com.example.calendar.eventsView;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,12 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.calendar.CalendarEventOriginal;
+import com.example.calendar.Event;
 import com.example.calendar.Holiday;
 import com.example.calendar.R;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
 
 /**
@@ -35,7 +33,7 @@ public class ViewEventsFragment extends Fragment implements ViewEventsAdapter.On
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ArrayList<CalendarEventOriginal> eventsList;
+    ArrayList<Event> eventsList;
     ArrayList<Holiday> holidaysList;
     TextView dateTextView;
     LocalDate selectedDate;
@@ -44,7 +42,7 @@ public class ViewEventsFragment extends Fragment implements ViewEventsAdapter.On
         // Required empty public constructor
     }
 
-    public ViewEventsFragment(LocalDate selectedDate, ArrayList<CalendarEventOriginal> eventsList, ArrayList<Holiday> holidaysList){
+    public ViewEventsFragment(LocalDate selectedDate, ArrayList<Event> eventsList, ArrayList<Holiday> holidaysList){
         this.selectedDate = selectedDate;
         this.eventsList = eventsList;
         this.holidaysList = holidaysList;
