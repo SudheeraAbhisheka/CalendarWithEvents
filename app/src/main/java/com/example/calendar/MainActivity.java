@@ -2,12 +2,21 @@ package com.example.calendar;
 
 import static android.content.ContentValues.TAG;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.calendar.calendar.CalendarFragment;
@@ -20,12 +29,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        FragmentManager fm = getSupportFragmentManager();
-        CalendarFragment calendarFragment;
+//        FragmentManager fm = getSupportFragmentManager();
+//        CalendarFragment calendarFragment;
+//
+//        calendarFragment = new CalendarFragment();
+//        fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
 
-        calendarFragment = new CalendarFragment();
-        fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
-
-
+//        NotificationManager notificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
 }

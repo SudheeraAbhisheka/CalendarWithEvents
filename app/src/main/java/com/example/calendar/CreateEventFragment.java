@@ -12,11 +12,13 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -110,6 +112,8 @@ public class CreateEventFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        createNotificationChannel();
     }
 
     @Override
@@ -129,6 +133,8 @@ public class CreateEventFragment extends Fragment {
         textViewNotificationDateTime = v.findViewById(R.id.textViewSelectedNotificationDateTime);
         backButton = v.findViewById(R.id.backButton_fragment_create_event);
 
+//        createNotificationChannel();
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.POST_NOTIFICATIONS) !=
                     PackageManager.PERMISSION_GRANTED){
@@ -136,7 +142,6 @@ public class CreateEventFragment extends Fragment {
                         new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
             }
         }
-        createNotificationChannel();
 
         selectDateTextView.setText(selectedDate.toString());
 
@@ -271,10 +276,11 @@ public class CreateEventFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
 //                intent.setAction("com.example.calendar.ACTION_SHOW_NOTIFICATION");
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("title", title);
                 intent.putExtra("note", editTextNote.getText().toString());
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast( getContext(), 0, intent, PendingIntent.FLAG_MUTABLE);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity(), (int)System.currentTimeMillis(), intent, PendingIntent.FLAG_MUTABLE);
 
                 AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
@@ -336,6 +342,8 @@ public class CreateEventFragment extends Fragment {
                 CalendarFragment calendarFragment = new CalendarFragment();
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
 
+//                makeNotification(title, editTextNote.getText().toString());
+
             }
         });
 
@@ -382,10 +390,46 @@ public class CreateEventFragment extends Fragment {
         CharSequence name = "Notification channel";
         String description = "Calendar events notification";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel("111E2", name, importance);
+        NotificationChannel channel = new NotificationChannel("111E5", name, importance);
         channel.setDescription(description);
 
         NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
+    }
+
+    public void makeNotification(String title, String note){
+        String chanelID = "CHANNEL_ID_NOTIFICATION";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity().getApplicationContext(), chanelID);
+        builder.setSmallIcon((R.drawable.notification_icon))
+                .setContentTitle(title)
+                .setContentText(note)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        Intent intent = new Intent(getActivity().getApplicationContext(), NotificationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("data", title);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),
+                0, intent, PendingIntent.FLAG_MUTABLE);
+        builder.setContentIntent(pendingIntent);
+
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationChannel notificationChannel =
+                notificationManager.getNotificationChannel(chanelID);
+        if(notificationChannel == null){
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            notificationChannel = new NotificationChannel(chanelID,
+                    "Some description", importance);
+            notificationChannel.setLightColor(Color.GREEN);
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        notificationManager.notify(0, builder.build());
     }
 }

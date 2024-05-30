@@ -17,6 +17,9 @@
         android:theme="@style/Theme.Calendar"
         tools:targetApi="31">
         <activity
+            android:name=".NotificationActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
@@ -29,8 +32,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ReminderBroadcast"/>
-
+        <receiver android:name=".ReminderBroadcast" />
     </application>
 
 </manifest>

@@ -1,8 +1,15 @@
 package com.example.calendar.eventsView;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.calendar.Event;
 import com.example.calendar.Holiday;
+import com.example.calendar.NotificationActivity;
 import com.example.calendar.R;
 import com.example.calendar.calendar.CalendarFragment;
 

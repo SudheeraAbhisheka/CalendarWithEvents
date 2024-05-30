@@ -5,11 +5,14 @@ import static android.content.Intent.getIntent;
 
 import static androidx.core.app.NotificationCompat.getExtras;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -24,7 +27,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         String title = intent.getStringExtra("title");
         String note = intent.getStringExtra("note");
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "111E2")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "111E5")
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(title)
                 .setContentText(note)
@@ -44,5 +47,18 @@ public class ReminderBroadcast extends BroadcastReceiver {
             return;
         }
         notificationManager.notify(200, builder.build());
+
+        Intent myIntent = new Intent(context,  NotificationActivity.class);
+//        myIntent.putExtra("data", "Hello world");
+//        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startActivity(myIntent);
+
+//        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        myIntent.putExtra("data", title);
+//
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+//                0, myIntent, PendingIntent.FLAG_MUTABLE);
+//        builder.setContentIntent(pendingIntent);
+
     }
 }
