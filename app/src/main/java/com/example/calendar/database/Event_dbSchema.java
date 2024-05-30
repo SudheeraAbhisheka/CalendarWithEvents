@@ -14,6 +14,7 @@ public class Event_dbSchema {
             public static final String NOTIFY_PRIOR = "notifyPrior";
             public static final String TITLE = "title";
             public static final String NOTE = "note";
+            public static final String IS_HOLIDAY = "isHoliday";
 
         }
     }
@@ -27,6 +28,7 @@ public class Event_dbSchema {
             public static final String DAY = "day";
             public static final String TITLE = "title";
             public static final String NOTE = "note";
+            public static final String IS_HOLIDAY = "isHoliday";
 
         }
     }

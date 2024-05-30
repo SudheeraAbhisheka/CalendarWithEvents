@@ -12,8 +12,9 @@ public class Event {
     private int notifyPrior;
     private String title;
     private String note;
+    private boolean isHoliday;
 
-    public Event(int year, int month, int day, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int notifyPrior, String title, String note) {
+    public Event(int year, int month, int day, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int notifyPrior, String title, String note, boolean isHoliday) {
         this.year = year;
         this.month = month;
         this.day = day;
@@ -24,14 +25,16 @@ public class Event {
         this.notifyPrior = notifyPrior;
         this.title = title;
         this.note = note;
+        this.isHoliday = isHoliday;
     }
 
-    public Event(int year, int month, int day, String title, String note) {
+    public Event(int year, int month, int day, String title, String note, boolean isHoliday) {
         this.year = year;
         this.month = month;
         this.day = day;
         this.title = title;
         this.note = note;
+        this.isHoliday = isHoliday;
     }
 
     public int getYear() {
@@ -72,6 +75,10 @@ public class Event {
 
     public String getNote() {
         return note;
+    }
+
+    public boolean isHoliday() {
+        return isHoliday;
     }
 }
 

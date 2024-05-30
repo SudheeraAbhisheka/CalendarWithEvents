@@ -33,6 +33,7 @@ public class Event_dbModel {
         cv.put(EventsTable.Columns.END_TIME_MINUTE, event.getEndTimeMinute());
         cv.put(EventsTable.Columns.TITLE, event.getTitle());
         cv.put(EventsTable.Columns.NOTE, event.getNote());
+        cv.put(EventsTable.Columns.IS_HOLIDAY, event.isHoliday());
 
         dataBase.insert(EventsTable.NAME, null, cv);
     }
@@ -44,6 +45,7 @@ public class Event_dbModel {
         cv.put(HolidaysTable.Columns.DAY, holiday.getDay());
         cv.put(HolidaysTable.Columns.TITLE, holiday.getTitle());
         cv.put(HolidaysTable.Columns.NOTE, holiday.getNote());
+        cv.put(HolidaysTable.Columns.IS_HOLIDAY, holiday.isHoliday());
 
         dataBase.insert(HolidaysTable.NAME, null, cv);
     }
@@ -97,14 +99,14 @@ public class Event_dbModel {
         return holidaysList;
     }
 
-    public void deleteEvent(int year, int month, int day, String title) {
+    public void deleteEvent(int year, int month, int day, String title, Integer isHoliday) {
         dataBase.delete(EventsTable.NAME,
                 EventsTable.Columns.YEAR + " = ? AND " +
                         EventsTable.Columns.MONTH + " = ? AND " +
                         EventsTable.Columns.DAY + " = ? AND " +
-                        EventsTable.Columns.TITLE + " = ?",
-                new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), title});
+                        EventsTable.Columns.TITLE + " = ? AND " +
+                        EventsTable.Columns.IS_HOLIDAY + " = ?",
+                new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), title, String.valueOf(isHoliday)});
     }
-
 
 }

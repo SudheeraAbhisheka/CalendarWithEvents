@@ -6,13 +6,15 @@ public class Holiday {
     private int day;
     private String title;
     private String note;
+    private boolean isHoliday;
 
-    public Holiday(int year, int month, int day, String title, String note) {
+    public Holiday(int year, int month, int day, String title, String note, boolean isHoliday) {
         this.year = year;
         this.month = month;
         this.day = day;
         this.title = title;
         this.note = note;
+        this.isHoliday = isHoliday;
     }
 
     public int getYear() {
@@ -33,5 +35,9 @@ public class Holiday {
 
     public String getNote() {
         return note;
+    }
+
+    public boolean isHoliday() {
+        return isHoliday;
     }
 }

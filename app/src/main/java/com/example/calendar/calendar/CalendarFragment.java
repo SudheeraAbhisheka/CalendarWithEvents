@@ -199,7 +199,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             }
             else{
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                ViewEventsFragment viewEventsFragment = new ViewEventsFragment(selectedDate, eventsList);
+                ViewEventsFragment viewEventsFragment = new ViewEventsFragment(selectedDate, eventsList, database);
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, viewEventsFragment).commit();
             }
         }
@@ -216,26 +216,27 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
     private void createHolidaysTableOnce(){
 
-        database.addHoliday(new Holiday(2024, 01, 01, "New Year's Day", "National holiday"));
-        database.addHoliday(new Holiday(2024, 01, 15, "Tamil Thai Pongal Day", "Cultural holiday"));
-        database.addHoliday(new Holiday(2024, 02, 04, "Independence Day", "National holiday"));
-        database.addHoliday(new Holiday(2024, 03, 8, "Mahashivratri", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 03, 29, "Good Friday", "Christian holiday"));
-        database.addHoliday(new Holiday(2024, 03, 31, "Easter Sunday", "Christian holiday"));
-        database.addHoliday(new Holiday(2024, 04, 10, "Bak Full Moon Poya Day", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 04, 13, "Sinhala and Tamil New Year's Eve", "Cultural holiday"));
-        database.addHoliday(new Holiday(2024, 04, 14, "Sinhala and Tamil New Year", "Cultural holiday"));
-        database.addHoliday(new Holiday(2024, 04, 21, "Good Friday", "Christian holiday"));
-        database.addHoliday(new Holiday(2024, 05, 01, "May Day", "National holiday"));
-        database.addHoliday(new Holiday(2024, 05, 23, "Vesak Full Moon Poya Day", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 05, 24, "Day after Vesak Full Moon Poya Day", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 06, 21, "Poson Full Moon Poya Day", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 07, 19, "Eid al-Adha", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 07, 20, "Esala Full Moon Poya Day", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 8, 19, "Raksha Bandhan", "Cultural holiday"));
-        database.addHoliday(new Holiday(2024, 9, 16, "Binara Full Moon Poya Day", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 10, 14, "Vap Full Moon Poya Day", "Religious holiday"));
-        database.addHoliday(new Holiday(2024, 10, 23, "Deepavali", "Cultural holiday"));
+        database.addHoliday(new Holiday(2024, 01, 01, "New Year's Day", "National holiday", true));
+        database.addHoliday(new Holiday(2024, 01, 15, "Tamil Thai Pongal Day", "Cultural holiday", true));
+        database.addHoliday(new Holiday(2024, 02, 04, "Independence Day", "National holiday", true));
+        database.addHoliday(new Holiday(2024, 03, 8, "Mahashivratri", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 03, 29, "Good Friday", "Christian holiday", true));
+        database.addHoliday(new Holiday(2024, 03, 31, "Easter Sunday", "Christian holiday", true));
+        database.addHoliday(new Holiday(2024, 04, 10, "Bak Full Moon Poya Day", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 04, 13, "Sinhala and Tamil New Year's Eve", "Cultural holiday", true));
+        database.addHoliday(new Holiday(2024, 04, 14, "Sinhala and Tamil New Year", "Cultural holiday", true));
+        database.addHoliday(new Holiday(2024, 04, 21, "Good Friday", "Christian holiday", true));
+        database.addHoliday(new Holiday(2024, 05, 01, "May Day", "National holiday", true));
+        database.addHoliday(new Holiday(2024, 05, 23, "Vesak Full Moon Poya Day", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 05, 24, "Day after Vesak Full Moon Poya Day", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 06, 21, "Poson Full Moon Poya Day", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 07, 19, "Eid al-Adha", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 07, 20, "Esala Full Moon Poya Day", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 8, 19, "Raksha Bandhan", "Cultural holiday", true));
+        database.addHoliday(new Holiday(2024, 9, 16, "Binara Full Moon Poya Day", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 10, 14, "Vap Full Moon Poya Day", "Religious holiday", true));
+        database.addHoliday(new Holiday(2024, 10, 23, "Deepavali", "Cultural holiday", true));
+
 
 
     }

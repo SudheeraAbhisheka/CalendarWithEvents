@@ -28,14 +28,16 @@ public class Event_dbHelper extends SQLiteOpenHelper {
                 EventsTable.Columns.END_TIME_MINUTE + " INTEGER, "+
                 EventsTable.Columns.NOTIFY_PRIOR + " INTEGER, "+
                 EventsTable.Columns.TITLE + " Text, "+
-                EventsTable.Columns.NOTE+ " Text);");
+                EventsTable.Columns.NOTE + " Text, "+
+                EventsTable.Columns.IS_HOLIDAY+ " INTEGER);");
 
         sqLiteDatabase.execSQL("create table "+HolidaysTable.NAME+"("+
                 HolidaysTable.Columns.YEAR + " INTEGER, "+
                 HolidaysTable.Columns.MONTH + " INTEGER, "+
                 HolidaysTable.Columns.DAY + " INTEGER, "+
                 HolidaysTable.Columns.TITLE + " Text, "+
-                HolidaysTable.Columns.NOTE+ " Text);");
+                HolidaysTable.Columns.NOTE + " Text, "+
+                HolidaysTable.Columns.IS_HOLIDAY+ " INTEGER);");
     }
 
     @Override

@@ -63,8 +63,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
 
 
         if(eventsList.size() >= 3){
-            holder.eventHolder_more.setText("....");
-
             holder.eventHolder1.setVisibility(View.VISIBLE);
             holder.eventHolder2.setVisibility(View.VISIBLE);
             holder.eventHolder3.setVisibility(View.VISIBLE);
@@ -84,6 +82,10 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
             holder.eventHolder1.setVisibility(View.VISIBLE);
 
             holder.eventHolder1.setText(eventsList.get(0).getTitle());
+        }
+
+        if(eventsList.size() > 3) {
+            holder.eventHolder_more.setText("....");
         }
     }
 

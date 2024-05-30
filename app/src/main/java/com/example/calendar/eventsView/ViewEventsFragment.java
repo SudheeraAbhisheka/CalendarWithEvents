@@ -18,6 +18,7 @@ import com.example.calendar.Event;
 import com.example.calendar.Holiday;
 import com.example.calendar.R;
 import com.example.calendar.calendar.CalendarFragment;
+import com.example.calendar.database.Event_dbModel;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,8 +38,8 @@ public class ViewEventsFragment extends Fragment{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    Event_dbModel database;
     ArrayList<Event> eventsList;
-
     TextView dateTextView;
     LocalDate selectedDate;
     ImageView backButton;
@@ -47,9 +48,10 @@ public class ViewEventsFragment extends Fragment{
         // Required empty public constructor
     }
 
-    public ViewEventsFragment(LocalDate selectedDate, ArrayList<Event> eventsList){
+    public ViewEventsFragment(LocalDate selectedDate, ArrayList<Event> eventsList, Event_dbModel database){
         this.selectedDate = selectedDate;
         this.eventsList = eventsList;
+        this.database = database;
     }
 
     /**
@@ -92,7 +94,7 @@ public class ViewEventsFragment extends Fragment{
 
         RecyclerView rv = v.findViewById(R.id.ViewEventsRecyclerView);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        ViewEventsAdapter viewEventsAdapter = new ViewEventsAdapter(eventsList);
+        ViewEventsAdapter viewEventsAdapter = new ViewEventsAdapter(eventsList, database);
         rv.setAdapter(viewEventsAdapter);
 
         backButton.setOnClickListener(new View.OnClickListener() {

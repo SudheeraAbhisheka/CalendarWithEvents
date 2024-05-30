@@ -1,7 +1,5 @@
 package com.example.calendar;
 
-import static android.content.ContentValues.TAG;
-
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -12,18 +10,15 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +69,9 @@ public class CreateEventFragment extends Fragment {
     private ImageView notifyDateTimeImageView;
     private TextView textViewNotificationDateTime;
     private int notifyYear, notifyMonth, notifyDay, notifyHour, notifyMinute;
-    private boolean chooseFromDropDown;
+    private int notifyTimeFrom;
+    private final int FROM_DROPDOWN_MENU = 1;
+    private final int FROM_CALENDAR = 2;
     private ImageView backButton;
     private int createEventYear;
     private int createEventMonth;
@@ -160,7 +157,6 @@ public class CreateEventFragment extends Fragment {
                         selectDateTextView.setText(LocalDate.of(createEventYear, createEventMonth, createEventDay).toString());
                     }
                 }, createEventYear, createEventMonth-1, createEventDay);
-                datePickerDialog.setTitle("Select the notification time");
 
                 datePickerDialog.show();
             }
@@ -215,26 +211,26 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i == 0){
-                    chooseFromDropDown = false;
+                    notifyTimeFrom = 0;
                     notifyPrior = 0;
                     notifyDateTimeImageView.setVisibility(View.VISIBLE);
                     textViewNotificationDateTime.setVisibility(View.VISIBLE);
 
                 }else if(i == 1){
-                    chooseFromDropDown = true;
+                    notifyTimeFrom = FROM_DROPDOWN_MENU;
                     notifyPrior = 15;
                     notifyDateTimeImageView.setVisibility(View.INVISIBLE);
                     textViewNotificationDateTime.setVisibility(View.INVISIBLE);
 
 
                 }else if(i == 2){
-                    chooseFromDropDown = true;
+                    notifyTimeFrom = FROM_DROPDOWN_MENU;
                     notifyPrior = 60;
                     notifyDateTimeImageView.setVisibility(View.INVISIBLE);
                     textViewNotificationDateTime.setVisibility(View.INVISIBLE);
 
                 }else if(i == 3){
-                    chooseFromDropDown = true;
+                    notifyTimeFrom = FROM_DROPDOWN_MENU;
                     notifyPrior = 60 * 24;
                     notifyDateTimeImageView.setVisibility(View.INVISIBLE);
                     textViewNotificationDateTime.setVisibility(View.INVISIBLE);
@@ -291,7 +287,7 @@ public class CreateEventFragment extends Fragment {
                 AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
 
-                if(chooseFromDropDown){
+                if(notifyTimeFrom == FROM_DROPDOWN_MENU){
                     try{
                         LocalDateTime localDateTime = LocalDateTime.of(
                                 createEventYear,
@@ -313,7 +309,7 @@ public class CreateEventFragment extends Fragment {
 
                     }
                 }
-                else{
+                else if (notifyTimeFrom == FROM_CALENDAR){
                     try{
                         LocalDateTime localDateTime = LocalDateTime.of(notifyYear, notifyMonth, notifyDay, notifyHour, notifyMinute, 0);
                         ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Asia/Colombo"));
@@ -338,7 +334,8 @@ public class CreateEventFragment extends Fragment {
                         endEventMinute,
                         notifyPrior,
                         title,
-                        editTextNote.getText().toString()
+                        editTextNote.getText().toString(),
+                        false
                 ));
 
 
@@ -387,7 +384,7 @@ public class CreateEventFragment extends Fragment {
                     textViewNotificationDateTime.setText(
                             String.format("%02d:%02d %02d/%02d/%d", notifyHour, notifyMinute, notifyDay, notifyMonth + 1, notifyYear)
                     );
-                    chooseFromDropDown = false;
+                    notifyTimeFrom = FROM_CALENDAR;
 
                 }else{
                     Toast.makeText(getContext(), "The current time is past the selected notify time.", Toast.LENGTH_LONG).show();
