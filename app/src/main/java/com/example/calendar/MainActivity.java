@@ -29,13 +29,5 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-//        FragmentManager fm = getSupportFragmentManager();
-//        CalendarFragment calendarFragment;
-//
-//        calendarFragment = new CalendarFragment();
-//        fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
-
-//        NotificationManager notificationManager =
-//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
 }

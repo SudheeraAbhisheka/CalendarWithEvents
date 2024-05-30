@@ -1,6 +1,7 @@
 package com.example.calendar;
 
 public class Event {
+
     private int year;
     private int month;
     private int day;
@@ -21,6 +22,14 @@ public class Event {
         this.endTimeHour = endTimeHour;
         this.endTimeMinute = endTimeMinute;
         this.notifyPrior = notifyPrior;
+        this.title = title;
+        this.note = note;
+    }
+
+    public Event(int year, int month, int day, String title, String note) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
         this.title = title;
         this.note = note;
     }

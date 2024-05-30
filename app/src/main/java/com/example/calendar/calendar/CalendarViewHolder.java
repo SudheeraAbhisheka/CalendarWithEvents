@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendar.R;
 
-public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
 {
     public final TextView dayOfMonth;
     public final TextView eventHolder1, eventHolder2, eventHolder3, eventHolder_more;
     public final ConstraintLayout constraintLayout;
 
     private final CalendarAdapter.OnItemListener onItemListener;
+    private final CalendarAdapter.OnItemListener onItemListenerLongClick;
     public CalendarViewHolder(@NonNull View itemView, CalendarAdapter.OnItemListener onItemListener)
     {
         super(itemView);
@@ -27,7 +28,9 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.
         constraintLayout = itemView.findViewById(R.id.calendarCellConstraintLayout);
 
         this.onItemListener = onItemListener;
+        this.onItemListenerLongClick = onItemListener;
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
     }
 
     @Override
@@ -42,4 +45,19 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.
         }
         onItemListener.onItemClick(i);
     }
+
+    @Override
+    public boolean onLongClick(View view) {
+        int i = 0;
+        try{
+            i = Integer.parseInt(dayOfMonth.getText().toString());
+
+        }catch (NumberFormatException e){
+
+        }
+        onItemListenerLongClick.onLongClickListener(i);
+
+        return false;
+    }
+
 }

@@ -72,8 +72,8 @@ public class Event_dbModel {
 
         return eventsList;
     }
-    public ArrayList<Holiday> getHolidaysInADay(int year, int month, int day){
-        ArrayList<Holiday> holidaysList = new ArrayList<>();
+    public ArrayList<Event> getHolidaysInADay(int year, int month, int day){
+        ArrayList<Event> holidaysList = new ArrayList<>();
 
         Cursor cursor = dataBase.rawQuery("SELECT * FROM "+ Event_dbSchema.HolidaysTable.NAME +
                         " WHERE " +  HolidaysTable.Columns.YEAR + " = ? AND " +
@@ -96,5 +96,15 @@ public class Event_dbModel {
 
         return holidaysList;
     }
+
+    public void deleteEvent(int year, int month, int day, String title) {
+        dataBase.delete(EventsTable.NAME,
+                EventsTable.Columns.YEAR + " = ? AND " +
+                        EventsTable.Columns.MONTH + " = ? AND " +
+                        EventsTable.Columns.DAY + " = ? AND " +
+                        EventsTable.Columns.TITLE + " = ?",
+                new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day), title});
+    }
+
 
 }

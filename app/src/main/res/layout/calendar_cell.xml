@@ -3,67 +3,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/calendarCellConstraintLayout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="invisible"
     android:background="@drawable/custom_border">
 
     <TextView
         android:id="@+id/cellDayText"
-        android:layout_width="23dp"
-        android:layout_height="27dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textSize="20sp"
+        android:maxLines="1"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/textViewEvent1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <TextView
-        android:id="@+id/textViewEventHolderMore"
-        android:layout_width="22dp"
-        android:layout_height="11dp"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/cellDayText"
-        app:layout_constraintHorizontal_bias="0.272"
-        app:layout_constraintStart_toEndOf="@+id/cellDayText"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEvent3"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <TextView
-        android:id="@+id/textViewEvent2"
-        android:layout_width="0dp"
-        android:layout_height="11dp"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewEvent3"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textViewEvent1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEvent1"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <TextView
-        android:id="@+id/textViewEvent3"
-        android:layout_width="0dp"
-        android:layout_height="11dp"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewEventHolderMore"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEvent2"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/textViewEvent1"
         android:layout_width="0dp"
-        android:layout_height="11dp"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewEvent2"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:background="@drawable/textview_outline"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/cellDayText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cellDayText"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textViewEvent2"/>
 
+    <TextView
+        android:id="@+id/textViewEvent2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:background="@drawable/textview_outline"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/textViewEvent1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textViewEvent3"/>
+
+    <TextView
+        android:id="@+id/textViewEvent3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:visibility="invisible"
+        android:background="@drawable/textview_outline"
+        app:layout_constraintTop_toBottomOf="@id/textViewEvent2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textViewEventHolderMore"/>
+
+    <TextView
+        android:id="@+id/textViewEventHolderMore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:maxLines="1"
+        app:layout_constraintTop_toBottomOf="@id/textViewEvent3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,18 +47,5 @@ public class ReminderBroadcast extends BroadcastReceiver {
             return;
         }
         notificationManager.notify(200, builder.build());
-
-        Intent myIntent = new Intent(context,  NotificationActivity.class);
-//        myIntent.putExtra("data", "Hello world");
-//        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(myIntent);
-
-//        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        myIntent.putExtra("data", title);
-//
-//        PendingIntent pendingIntent = PendingIntent.getActivity(context,
-//                0, myIntent, PendingIntent.FLAG_MUTABLE);
-//        builder.setContentIntent(pendingIntent);
-
     }
 }

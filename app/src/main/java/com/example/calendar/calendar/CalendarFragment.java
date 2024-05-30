@@ -185,20 +185,35 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     {
         if(selectedDay != 0){
             selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
-            Toast.makeText(getActivity(), selectedDate.toString() + " selected", Toast.LENGTH_SHORT).show();
 
             ArrayList<Event> eventsList =
                     database.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
-            ArrayList<Holiday> holidaysList =
-                    database.getHolidaysInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
 
-            if(!(eventsList.isEmpty() & holidaysList.isEmpty())){
+            eventsList.addAll(
+                    database.getHolidaysInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay)
+            );
+
+            if(eventsList.isEmpty()){
+                Toast.makeText(getActivity(), selectedDate.toString() + " selected", Toast.LENGTH_SHORT).show();
+
+            }
+            else{
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                ViewEventsFragment viewEventsFragment = new ViewEventsFragment(selectedDate, eventsList, holidaysList);
+                ViewEventsFragment viewEventsFragment = new ViewEventsFragment(selectedDate, eventsList);
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, viewEventsFragment).commit();
             }
         }
     }
+
+    @Override
+    public void onLongClickListener(int selectedDay) {
+        if(selectedDay != 0) {
+            selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+            Toast.makeText(getActivity(), selectedDate.toString() + " selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     private void createHolidaysTableOnce(){
 
         database.addHoliday(new Holiday(2024, 01, 01, "New Year's Day", "National holiday"));

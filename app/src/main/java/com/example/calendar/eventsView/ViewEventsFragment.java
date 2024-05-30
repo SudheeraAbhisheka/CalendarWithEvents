@@ -1,15 +1,8 @@
 package com.example.calendar.eventsView;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.calendar.Event;
 import com.example.calendar.Holiday;
-import com.example.calendar.NotificationActivity;
 import com.example.calendar.R;
 import com.example.calendar.calendar.CalendarFragment;
 
@@ -46,7 +38,7 @@ public class ViewEventsFragment extends Fragment{
     private String mParam1;
     private String mParam2;
     ArrayList<Event> eventsList;
-    ArrayList<Holiday> holidaysList;
+
     TextView dateTextView;
     LocalDate selectedDate;
     ImageView backButton;
@@ -55,10 +47,9 @@ public class ViewEventsFragment extends Fragment{
         // Required empty public constructor
     }
 
-    public ViewEventsFragment(LocalDate selectedDate, ArrayList<Event> eventsList, ArrayList<Holiday> holidaysList){
+    public ViewEventsFragment(LocalDate selectedDate, ArrayList<Event> eventsList){
         this.selectedDate = selectedDate;
         this.eventsList = eventsList;
-        this.holidaysList = holidaysList;
     }
 
     /**
@@ -101,7 +92,7 @@ public class ViewEventsFragment extends Fragment{
 
         RecyclerView rv = v.findViewById(R.id.ViewEventsRecyclerView);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        ViewEventsAdapter viewEventsAdapter = new ViewEventsAdapter(eventsList, holidaysList);
+        ViewEventsAdapter viewEventsAdapter = new ViewEventsAdapter(eventsList);
         rv.setAdapter(viewEventsAdapter);
 
         backButton.setOnClickListener(new View.OnClickListener() {

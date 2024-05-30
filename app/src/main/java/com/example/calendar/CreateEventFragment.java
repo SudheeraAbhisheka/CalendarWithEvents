@@ -68,8 +68,8 @@ public class CreateEventFragment extends Fragment {
     private Spinner spinnerNotify;
     private TextView textViewStartTime, textViewEndTime;
     private Button saveButton;
-    private int startEventHour = -1, startEventMinute = 0,
-    endEventHour = -1, endEventMinute = 0;
+    private int startEventHour = 0, startEventMinute = 0,
+    endEventHour = 0, endEventMinute = 0;
     private int notifyPrior = 0;
     private ImageView notifyDateTimeImageView;
     private TextView textViewNotificationDateTime;
@@ -133,7 +133,6 @@ public class CreateEventFragment extends Fragment {
         textViewNotificationDateTime = v.findViewById(R.id.textViewSelectedNotificationDateTime);
         backButton = v.findViewById(R.id.backButton_fragment_create_event);
 
-//        createNotificationChannel();
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.POST_NOTIFICATIONS) !=
@@ -202,7 +201,7 @@ public class CreateEventFragment extends Fragment {
         });
 
         ArrayList<String> a = new ArrayList<>();
-        a.add("Notification time");
+        a.add("Select from calendar");
         a.add("15 minutes before");
         a.add("1 hour before");
         a.add("1 day before");
@@ -219,18 +218,27 @@ public class CreateEventFragment extends Fragment {
                     chooseFromDropDown = false;
                     notifyPrior = 0;
                     notifyDateTimeImageView.setVisibility(View.VISIBLE);
+                    textViewNotificationDateTime.setVisibility(View.VISIBLE);
+
                 }else if(i == 1){
                     chooseFromDropDown = true;
                     notifyPrior = 15;
-                    notifyDateTimeImageView.setVisibility(View.GONE);
+                    notifyDateTimeImageView.setVisibility(View.INVISIBLE);
+                    textViewNotificationDateTime.setVisibility(View.INVISIBLE);
+
+
                 }else if(i == 2){
                     chooseFromDropDown = true;
                     notifyPrior = 60;
-                    notifyDateTimeImageView.setVisibility(View.GONE);
+                    notifyDateTimeImageView.setVisibility(View.INVISIBLE);
+                    textViewNotificationDateTime.setVisibility(View.INVISIBLE);
+
                 }else if(i == 3){
                     chooseFromDropDown = true;
                     notifyPrior = 60 * 24;
-                    notifyDateTimeImageView.setVisibility(View.GONE);
+                    notifyDateTimeImageView.setVisibility(View.INVISIBLE);
+                    textViewNotificationDateTime.setVisibility(View.INVISIBLE);
+
                 }
             }
 
@@ -275,8 +283,6 @@ public class CreateEventFragment extends Fragment {
                 }
 
                 Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
-//                intent.setAction("com.example.calendar.ACTION_SHOW_NOTIFICATION");
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("title", title);
                 intent.putExtra("note", editTextNote.getText().toString());
 
@@ -342,10 +348,9 @@ public class CreateEventFragment extends Fragment {
                 CalendarFragment calendarFragment = new CalendarFragment();
                 fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, calendarFragment).commit();
 
-//                makeNotification(title, editTextNote.getText().toString());
-
             }
         });
+
 
 
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -375,10 +380,20 @@ public class CreateEventFragment extends Fragment {
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                 notifyHour = hour;
                 notifyMinute = minute;
+                
+                LocalDateTime selectedTime = LocalDateTime.of(notifyYear, notifyMonth, notifyDay, notifyHour, notifyMinute, 0);
 
-                textViewNotificationDateTime.setText(
-                        String.format("%02d:%02d %02d/%02d/%d", notifyHour, notifyMinute, notifyDay, notifyMonth + 1, notifyYear)
-                );
+                if(selectedTime.isAfter(LocalDateTime.now())){
+                    textViewNotificationDateTime.setText(
+                            String.format("%02d:%02d %02d/%02d/%d", notifyHour, notifyMinute, notifyDay, notifyMonth + 1, notifyYear)
+                    );
+                    chooseFromDropDown = false;
+
+                }else{
+                    Toast.makeText(getContext(), "The current time is past the selected notify time.", Toast.LENGTH_LONG).show();
+                }
+
+
             }
         }, startEventHour, startEventMinute, false);
 
@@ -397,39 +412,4 @@ public class CreateEventFragment extends Fragment {
         notificationManager.createNotificationChannel(channel);
     }
 
-    public void makeNotification(String title, String note){
-        String chanelID = "CHANNEL_ID_NOTIFICATION";
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity().getApplicationContext(), chanelID);
-        builder.setSmallIcon((R.drawable.notification_icon))
-                .setContentTitle(title)
-                .setContentText(note)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        Intent intent = new Intent(getActivity().getApplicationContext(), NotificationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("data", title);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),
-                0, intent, PendingIntent.FLAG_MUTABLE);
-        builder.setContentIntent(pendingIntent);
-
-
-
-        NotificationManager notificationManager =
-                (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        NotificationChannel notificationChannel =
-                notificationManager.getNotificationChannel(chanelID);
-        if(notificationChannel == null){
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            notificationChannel = new NotificationChannel(chanelID,
-                    "Some description", importance);
-            notificationChannel.setLightColor(Color.GREEN);
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-
-        notificationManager.notify(0, builder.build());
-    }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,7 +30,7 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEventHeading" />
+        app:layout_constraintTop_toBottomOf="@id/textViewEventHeading" />
 
     <TextView
         android:id="@+id/textViewSelectDate"
@@ -38,31 +39,33 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="41dp"
         android:layout_marginEnd="25dp"
-        android:hint="Date (YYYY-MM-DD)"
-        android:inputType="date"
+        android:text="Date (YYYY-MM-DD)"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTitle" />
+        app:layout_constraintTop_toBottomOf="@id/editTextTitle" />
 
     <TextView
         android:id="@+id/textViewStartTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="42dp"
         android:text="Start time"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSelectDate" />
+        app:layout_constraintTop_toBottomOf="@id/textViewSelectDate" />
 
     <TextView
         android:id="@+id/textViewEndTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="42dp"
         android:text="End time"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStartTime" />
+        app:layout_constraintTop_toBottomOf="@id/textViewStartTime" />
 
     <EditText
         android:id="@+id/editTextNote"
@@ -75,48 +78,50 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEndTime" />
+        app:layout_constraintTop_toBottomOf="@id/textViewEndTime" />
 
     <Spinner
         android:id="@+id/spinnerNotify"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="41dp"
-        android:layout_marginEnd="25dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="9dp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNote" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/ImageViewDateTime"
+        app:layout_constraintEnd_toStartOf="@id/ImageViewDateTime"
+        app:layout_constraintStart_toStartOf="@id/textViewSelectedNotificationDateTime"
+        app:layout_constraintTop_toTopOf="@id/ImageViewDateTime" />
 
     <Button
         android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="42dp"
+        android:layout_marginBottom="65dp"
         android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ImageViewDateTime" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/ImageViewDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="25dp"
         android:src="@android:drawable/ic_menu_my_calendar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSelectedNotificationDateTime" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextNote" />
 
     <TextView
         android:id="@+id/textViewSelectedNotificationDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="33dp"
+        android:text="Notify at"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerNotify" />
+        app:layout_constraintTop_toBottomOf="@id/spinnerNotify" />
 
     <ImageView
         android:id="@+id/backButton_fragment_create_event"

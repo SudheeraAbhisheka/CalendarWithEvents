@@ -36,8 +36,8 @@ public class Event_dbCursor extends CursorWrapper {
             getString(getColumnIndex(EventsTable.Columns.NOTE))
         );
     }
-    public Holiday getHoliday(){
-        return new Holiday(
+    public Event getHoliday(){
+        return new Event(
                 getInt(getColumnIndex(Event_dbSchema.HolidaysTable.Columns.YEAR)),
                 getInt(getColumnIndex(Event_dbSchema.HolidaysTable.Columns.MONTH)),
                 getInt(getColumnIndex(Event_dbSchema.HolidaysTable.Columns.DAY)),

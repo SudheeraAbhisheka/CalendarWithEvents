@@ -1,5 +1,8 @@
 package com.example.calendar.calendar;
 
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +22,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
 {
     private final ArrayList<String> daysOfMonth;
     private ArrayList<Event> eventsList;
-    private ArrayList<Holiday> holidaysList;
     private final OnItemListener onItemListener;
     private Event_dbModel eventDatabase;
     private YearMonth yearMonth;
@@ -48,50 +50,40 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position)
     {
-        if(daysOfMonth.get(position) == ""){
-            holder.constraintLayout.setBackgroundResource(android.R.color.transparent);
-        }
-        else{
+        if(!daysOfMonth.get(position).equals("")){
             holder.dayOfMonth.setText(daysOfMonth.get(position));
+            holder.constraintLayout.setVisibility(View.VISIBLE);
+
+            eventsList = eventDatabase.getEventsInADay(yearMonth.getYear(), yearMonth.getMonthValue(), Integer.parseInt(daysOfMonth.get(position)));
+            eventsList.addAll(
+                    eventDatabase.getHolidaysInADay(yearMonth.getYear(), yearMonth.getMonthValue(), Integer.parseInt(daysOfMonth.get(position)))
+            );
+
         }
 
-        if(daysOfMonth.get(position) != ""){
-            eventsList = eventDatabase.getEventsInADay(yearMonth.getYear(), yearMonth.getMonthValue(), Integer.parseInt(daysOfMonth.get(position)));
-            holidaysList = eventDatabase.getHolidaysInADay(yearMonth.getYear(), yearMonth.getMonthValue(), Integer.parseInt(daysOfMonth.get(position)));
 
-            try{
+        if(eventsList.size() >= 3){
+            holder.eventHolder_more.setText("....");
 
-                if(eventsList.size() == 0){
-                    holder.eventHolder1.setText(holidaysList.get(0).getTitle());
-                    holder.eventHolder2.setText(holidaysList.get(1).getTitle());
-                    holder.eventHolder3.setText(holidaysList.get(2).getTitle());
+            holder.eventHolder1.setVisibility(View.VISIBLE);
+            holder.eventHolder2.setVisibility(View.VISIBLE);
+            holder.eventHolder3.setVisibility(View.VISIBLE);
 
-                }
-                else if(eventsList.size() == 1){
-                    holder.eventHolder1.setText(eventsList.get(0).getTitle());
-                    holder.eventHolder2.setText(holidaysList.get(1).getTitle());
-                    holder.eventHolder3.setText(holidaysList.get(2).getTitle());
+            holder.eventHolder1.setText(eventsList.get(0).getTitle());
+            holder.eventHolder2.setText(eventsList.get(1).getTitle());
+            holder.eventHolder3.setText(eventsList.get(2).getTitle());
 
-                }
-                else if(eventsList.size() == 2){
-                    holder.eventHolder1.setText(eventsList.get(0).getTitle());
-                    holder.eventHolder2.setText(eventsList.get(1).getTitle());
-                    holder.eventHolder3.setText(holidaysList.get(2).getTitle());
+        }else if(eventsList.size() == 2){
+            holder.eventHolder1.setVisibility(View.VISIBLE);
+            holder.eventHolder2.setVisibility(View.VISIBLE);
 
-                }
-                else if(eventsList.size() >= 3){
-                    holder.eventHolder1.setText(eventsList.get(0).getTitle());
-                    holder.eventHolder2.setText(eventsList.get(1).getTitle());
-                    holder.eventHolder3.setText(eventsList.get(2).getTitle());
-                }
+            holder.eventHolder1.setText(eventsList.get(0).getTitle());
+            holder.eventHolder2.setText(eventsList.get(1).getTitle());
 
-            }catch (IndexOutOfBoundsException e){
+        }else if(eventsList.size() == 1){
+            holder.eventHolder1.setVisibility(View.VISIBLE);
 
-            }
-
-            if(eventsList.size() + holidaysList.size() >= 3){
-                holder.eventHolder_more.setText("....");
-            }
+            holder.eventHolder1.setText(eventsList.get(0).getTitle());
         }
     }
 
@@ -104,5 +96,6 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder>
     public interface  OnItemListener
     {
         void onItemClick(int selectedDay);
+        void onLongClickListener(int selectedDay);
     }
 }

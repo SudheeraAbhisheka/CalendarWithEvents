@@ -1,5 +1,8 @@
 package com.example.calendar.eventsView;
 
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +18,8 @@ import java.util.ArrayList;
 
 public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder> {
     private ArrayList<Event> eventsList;
-    private ArrayList<Holiday> holidaysList;
-    public ViewEventsAdapter(ArrayList<Event> eventsList, ArrayList<Holiday> holidaysList){
+    public ViewEventsAdapter(ArrayList<Event> eventsList){
         this.eventsList = eventsList;
-        this.holidaysList = holidaysList;
     }
     @NonNull
     @Override
@@ -32,32 +33,30 @@ public class ViewEventsAdapter extends RecyclerView.Adapter<ViewEventsViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewEventsViewHolder holder, int position) {
-        if(position >= eventsList.size()){
-            holder.title.setText(holidaysList.get(position - eventsList.size()).getTitle());
-            holder.note.setText(holidaysList.get(position - eventsList.size()).getNote());
+        holder.title.setText(eventsList.get(position).getTitle());
+        holder.note.setText(eventsList.get(position).getNote());
+
+        Log.d(TAG, eventsList.get(position).getStartTimeHour() + " " + eventsList.get(position).getEndTimeHour());
+
+
+        if(eventsList.get(position).getStartTimeHour() != 0){
+            holder.startTime.setVisibility(View.VISIBLE);
+            holder.startTime.setText(
+                    String.format("Start time: %02d:%02d", eventsList.get(position).getStartTimeHour(), eventsList.get(position).getStartTimeMinute())
+            );
         }
-        else{
-            holder.title.setText(eventsList.get(position).getTitle());
-            holder.note.setText(eventsList.get(position).getNote());
 
-            String s;
-            if(eventsList.get(position).getStartTimeHour() != -1){
-                holder.startTime.setVisibility(View.VISIBLE);
-                s = String.format("Start time: %02d:%02d", eventsList.get(position).getStartTimeHour(), eventsList.get(position).getStartTimeMinute());
-                holder.startTime.setText(s);
-            }
-
-            if(eventsList.get(position).getEndTimeHour() != -1){
-                holder.endTime.setVisibility(View.VISIBLE);
-                s = String.format("End time: %02d:%02d", eventsList.get(position).getEndTimeHour(), eventsList.get(position).getEndTimeMinute());
-                holder.endTime.setText(s);
-            }
+        if(eventsList.get(position).getEndTimeHour() != 0){
+            holder.endTime.setVisibility(View.VISIBLE);
+            holder.endTime.setText(
+                    String.format("End time: %02d:%02d", eventsList.get(position).getEndTimeHour(), eventsList.get(position).getEndTimeMinute())
+            );
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return eventsList.size() + holidaysList.size();
+        return eventsList.size();
     }
 }
