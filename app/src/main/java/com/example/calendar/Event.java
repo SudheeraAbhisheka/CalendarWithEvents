@@ -13,8 +13,9 @@ public class Event {
     private String title;
     private String note;
     private boolean isHoliday;
+    private int pendingIntentKey;
 
-    public Event(int year, int month, int day, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int notifyPrior, String title, String note, boolean isHoliday) {
+    public Event(int year, int month, int day, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int notifyPrior, String title, String note, boolean isHoliday, int pendingIntentKey) {
         this.year = year;
         this.month = month;
         this.day = day;
@@ -26,6 +27,7 @@ public class Event {
         this.title = title;
         this.note = note;
         this.isHoliday = isHoliday;
+        this.pendingIntentKey = pendingIntentKey;
     }
 
     public Event(int year, int month, int day, String title, String note, boolean isHoliday) {
@@ -79,6 +81,10 @@ public class Event {
 
     public boolean isHoliday() {
         return isHoliday;
+    }
+
+    public int getPendingIntentKey() {
+        return pendingIntentKey;
     }
 }
 

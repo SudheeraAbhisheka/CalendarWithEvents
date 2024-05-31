@@ -40,7 +40,8 @@ public class Event_dbCursor extends CursorWrapper {
             getInt(getColumnIndex(EventsTable.Columns.NOTIFY_PRIOR)),
             getString(getColumnIndex(EventsTable.Columns.TITLE)),
             getString(getColumnIndex(EventsTable.Columns.NOTE)),
-            isHoliday
+            isHoliday,
+            getInt(getColumnIndex(EventsTable.Columns.PENDING_INTENT_KEY))
         );
     }
     public Event getHoliday(){

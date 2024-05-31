@@ -34,6 +34,7 @@ public class Event_dbModel {
         cv.put(EventsTable.Columns.TITLE, event.getTitle());
         cv.put(EventsTable.Columns.NOTE, event.getNote());
         cv.put(EventsTable.Columns.IS_HOLIDAY, event.isHoliday());
+        cv.put(EventsTable.Columns.PENDING_INTENT_KEY, event.getPendingIntentKey());
 
         dataBase.insert(EventsTable.NAME, null, cv);
     }

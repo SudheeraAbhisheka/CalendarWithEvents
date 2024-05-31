@@ -271,6 +271,7 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String title;
+                int pendingIntentKey;
 
                 if(editTextTitle.getText().toString().equals("")){
                     title = "No title";
@@ -282,7 +283,9 @@ public class CreateEventFragment extends Fragment {
                 intent.putExtra("title", title);
                 intent.putExtra("note", editTextNote.getText().toString());
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity(), (int)System.currentTimeMillis(), intent, PendingIntent.FLAG_MUTABLE);
+                pendingIntentKey = (int)System.currentTimeMillis();
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast( getActivity(), pendingIntentKey, intent, PendingIntent.FLAG_MUTABLE);
 
                 AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
@@ -335,7 +338,8 @@ public class CreateEventFragment extends Fragment {
                         notifyPrior,
                         title,
                         editTextNote.getText().toString(),
-                        false
+                        false,
+                        pendingIntentKey
                 ));
 
 

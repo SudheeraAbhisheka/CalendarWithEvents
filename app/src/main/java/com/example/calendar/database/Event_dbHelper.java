@@ -29,7 +29,8 @@ public class Event_dbHelper extends SQLiteOpenHelper {
                 EventsTable.Columns.NOTIFY_PRIOR + " INTEGER, "+
                 EventsTable.Columns.TITLE + " Text, "+
                 EventsTable.Columns.NOTE + " Text, "+
-                EventsTable.Columns.IS_HOLIDAY+ " INTEGER);");
+                EventsTable.Columns.IS_HOLIDAY + " INTEGER, "+
+                EventsTable.Columns.PENDING_INTENT_KEY+ " INTEGER);");
 
         sqLiteDatabase.execSQL("create table "+HolidaysTable.NAME+"("+
                 HolidaysTable.Columns.YEAR + " INTEGER, "+
