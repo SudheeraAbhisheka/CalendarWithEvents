@@ -39,7 +39,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="41dp"
         android:layout_marginEnd="25dp"
-        android:text="Date (YYYY-MM-DD)"
+        android:hint="Date (YYYY-MM-DD)"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="42dp"
-        android:text="Start time"
+        android:hint="Start time"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewSelectDate" />
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="42dp"
-        android:text="End time"
+        android:hint="End time"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewStartTime" />
@@ -118,7 +118,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="33dp"
-        android:text="Notify at"
+        android:hint="Notify at"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerNotify" />

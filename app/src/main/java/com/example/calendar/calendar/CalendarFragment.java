@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LongSummaryStatistics;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +46,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
     private Event_dbModel database;
+    private boolean LONG_CLICKED;
     Button previousMonthButton;
     Button nextMonthButton;
     Button buttonAddEvent;
@@ -183,26 +185,30 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     @Override
     public void onItemClick(int selectedDay)
     {
-        if(selectedDay != 0){
-            selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+        if(!LONG_CLICKED){
+            if(selectedDay != 0){
+                selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
 
-            ArrayList<Event> eventsList =
-                    database.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
+                ArrayList<Event> eventsList =
+                        database.getEventsInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
 
-            eventsList.addAll(
-                    database.getHolidaysInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay)
-            );
+                eventsList.addAll(
+                        database.getHolidaysInADay(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay)
+                );
 
-            if(eventsList.isEmpty()){
-                Toast.makeText(getActivity(), selectedDate.toString() + " selected", Toast.LENGTH_SHORT).show();
+                if(eventsList.isEmpty()){
+                    Toast.makeText(getActivity(), selectedDate.toString() + " selected", Toast.LENGTH_SHORT).show();
 
-            }
-            else{
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                ViewEventsFragment viewEventsFragment = new ViewEventsFragment(selectedDate, eventsList, database);
-                fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, viewEventsFragment).commit();
+                }
+                else{
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    ViewEventsFragment viewEventsFragment = new ViewEventsFragment(selectedDate, eventsList, database);
+                    fm.beginTransaction().replace(R.id.fragmentContainer_MainActivity, viewEventsFragment).commit();
+                }
             }
         }
+
+        LONG_CLICKED = false;
     }
 
     @Override
@@ -211,11 +217,11 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             selectedDate = LocalDate.of(selectedDate.getYear(), selectedDate.getMonthValue(), selectedDay);
             Toast.makeText(getActivity(), selectedDate.toString() + " selected", Toast.LENGTH_SHORT).show();
         }
+        LONG_CLICKED = true;
     }
 
 
     private void createHolidaysTableOnce(){
-
         database.addHoliday(new Holiday(2024, 01, 01, "New Year's Day", "National holiday", true));
         database.addHoliday(new Holiday(2024, 01, 15, "Tamil Thai Pongal Day", "Cultural holiday", true));
         database.addHoliday(new Holiday(2024, 02, 04, "Independence Day", "National holiday", true));
@@ -236,8 +242,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         database.addHoliday(new Holiday(2024, 9, 16, "Binara Full Moon Poya Day", "Religious holiday", true));
         database.addHoliday(new Holiday(2024, 10, 14, "Vap Full Moon Poya Day", "Religious holiday", true));
         database.addHoliday(new Holiday(2024, 10, 23, "Deepavali", "Cultural holiday", true));
-
-
 
     }
 }
